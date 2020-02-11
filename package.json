@@ -1,0 +1,29 @@
+{
+  "name": "helium",
+  "version": "1.0.0",
+  "description": "A Lightweight Chat Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xlayton/Helium.git"
+  },
+  "author": "Team Neon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Xlayton/Helium/issues"
+  },
+  "homepage": "https://github.com/Xlayton/Helium#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.8",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-sessions": "^1.0.6",
+    "pg": "^7.18.1",
+    "pug": "^2.0.4",
+    "ws": "^7.2.1"
+  }
+}
