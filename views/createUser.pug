@@ -1,0 +1,11 @@
+html
+    body
+        div(class="content")
+                form(id='userCreation' method='POST' action="/createUser" onsubmit="return checkCreation()" class='form')
+                    p Username:&nbsp;
+                        input(type='text' id='usernameCreation' name="username")
+                    p Password:&nbsp;
+                        input(type='text' id='passwordCreation' name="password")
+                    p E-mail:&nbsp;
+                        input(type='text' id='emailCreation' name="email")
+        script(src="/backend.js")
