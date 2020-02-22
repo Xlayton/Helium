@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var socket = new WebSocket("ws://localhost:3000");
+        socket.onmessage = function(e) {
+            var server_message = e.data;
+            console.log(server_message);
+        }
+        
+        socket.onopen = function(e) {
+            socket.send("Connection??")
+        }
+
+        socket.onerror = function(error) {
+        console.log('WebSocket Error: ' + error);
+};
+    </script>
+</body>
+
+</html>

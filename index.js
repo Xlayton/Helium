@@ -1,16 +1,22 @@
 require("dotenv").config();
-const express = require("express"),
-    pug = require('pug'),
-    multer = require('multer'),
-    route = require('./routes/routes.js'),
-    path = require('path'),
-    expressSession = require('express-session'),
-    bcrypt = require('bcrypt-nodejs'),
-    bodyParser = require('body-parser'),
-    pg = require('pg');
+<<<<<<< HEAD
+const express = require("express");
+const pug = require('pug');
+const multer = require('multer');
+const route = require('./routes/routes.js');
+const path = require('path');
+const expressSession = require('express-session');
+const bcrypt = require('bcrypt-nodejs');
+const bodyParser = require('body-parser');
+const pg = require('pg');
+=======
+const path = require('path');
+const express = require("express");
+>>>>>>> 6240fc4f8835640886079dd0063fffa7664a23d8
 const PORT = process.env.PORT;
 
 const app = express();
+app.use(express.static(path.join(__dirname+'/public')));
 
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
