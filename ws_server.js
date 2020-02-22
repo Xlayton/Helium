@@ -2,6 +2,7 @@ const WebSocket = require('ws');
 require('dotenv').config();
 const PORT = process.env.WSPORT;
 
+//To Run server use "node ws_server.js"
 //Create the websocket
 const wss = new WebSocket.Server({ port: PORT });
 
