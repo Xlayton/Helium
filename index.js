@@ -1,5 +1,4 @@
 require("dotenv").config();
-<<<<<<< HEAD
 const express = require("express");
 const pug = require('pug');
 const multer = require('multer');
@@ -9,10 +8,6 @@ const expressSession = require('express-session');
 const bcrypt = require('bcrypt-nodejs');
 const bodyParser = require('body-parser');
 const pg = require('pg');
-=======
-const path = require('path');
-const express = require("express");
->>>>>>> 6240fc4f8835640886079dd0063fffa7664a23d8
 const PORT = process.env.PORT;
 
 const app = express();
