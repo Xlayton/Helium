@@ -20,8 +20,6 @@ wss.on('connection', function connection(ws) {
     console.log("closed");
   });
   });
-  //Message sent to the frontend for user
-  ws.send('You can see this!');
 });
 
 

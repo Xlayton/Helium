@@ -3,9 +3,9 @@ var socket = new WebSocket("ws://localhost:3000");
         socket.onmessage = function(e) {
             document.getElementById("display").innerHTML += "<p>" + e.data + "</p>";
         }
-        
+        //Shows when user has connected
         socket.onopen = function(e) {
-            socket.send("Connection")
+            socket.send("User Connected")
         }
 
         socket.onerror = function(error) {
