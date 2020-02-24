@@ -8,6 +8,7 @@ const expressSession = require('express-session');
 const bcrypt = require('bcrypt-nodejs');
 const bodyParser = require('body-parser');
 const pg = require('pg');
+const fs = require('fs');
 const PORT = process.env.PORT;
 
 const app = express();
@@ -23,12 +24,21 @@ app.use(expressSession({
     resave: true
 }));
 
+var urlencodedParser = bodyParser.urlencoded({
+    extended: false
+});
+
 app.get('/seeUsers', route.viewUsers);
 app.get('/createUser', route.createUserPage);
-app.post('/createUser', route.createAUser);
-app.get('/updateUser', route.updateUserPage);
-app.post('/updateUser', route.updateUserDetails);
-app.get('/deleteUser', route.deleteUser);
+app.post('/createUser',urlencodedParser, route.createAUser);
+app.get('/updateUser/:id', route.updateUserPage);
+app.post('/updateUser/:id', urlencodedParser,route.updateUserDetails);
+app.get('/deleteUser/:id', route.deleteUser);
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 app.listen(PORT);
