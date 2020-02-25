@@ -12,7 +12,8 @@ const fs = require('fs');
 const PORT = process.env.PORT;
 
 const db = require('./db/createSchema');
-// you can test in here using db :)
+// db.getAllUsers().then(res => console.log(res));
+db.getUser(0).then(res => console.log(res));
 
 const app = express();
 app.use(express.static(path.join(__dirname+'/public')));
