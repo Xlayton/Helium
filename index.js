@@ -7,7 +7,6 @@ const path = require('path');
 const expressSession = require('express-session');
 const bcrypt = require('bcrypt-nodejs');
 const bodyParser = require('body-parser');
-const pg = require('pg');
 const fs = require('fs');
 const PORT = process.env.PORT;
 

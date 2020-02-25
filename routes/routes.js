@@ -1,15 +1,5 @@
 const bcrypt = require('bcrypt-nodejs');
-const pg = require('pg');
 const fs= require('fs');
-
-// var connectionString = "postgres://postgres:pa55w0rd@'PostgreSQL 12'/ip:8815/testDatabase";
-// var pgClient = new pg.Client(connectionString);
-// pgClient.connect();
-
-// var query = pgClient.query("Select * from 'Users'");
-// query.on("row", function(row, result){
-//     result.addRow("row");
-// })
 
 exports.viewUsers = (req, res) => {
     fs.readFile("config.json", (err, data) => {
@@ -113,6 +103,7 @@ exports.deleteUser = (req, res) => { //deletes user with id parameter
                         console.log(err);
                     }
                     res.redirect('/seeUsers');
+
                 });
             }
         });
