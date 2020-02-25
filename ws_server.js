@@ -17,6 +17,7 @@ wss.on('connection', function connection(ws) {
     websocketList.forEach(ws => {
       ws.send(message);
     });
+  //Removes that a user has disconnected, should display name when users are added
   ws.on('close', function close() {
     if(websocketList.includes(ws)) {
       websocketList = websocketList.filter((cli) => cli !== ws)
