@@ -10,7 +10,7 @@ const wss = new WebSocket.Server({ port: PORT });
 var websocketList = [];
  
 wss.on('connection', function connection(ws) {
-    console.log("Connection made")
+    console.log("Connection made");
     websocketList.push(ws);
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);

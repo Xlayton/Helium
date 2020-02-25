@@ -23,13 +23,13 @@ exports.viewUsers = (req, res) => {
             "userData": jsonParsed
         });
     });
-}
+};
 
 exports.createUserPage = (req, res) => { //taking user to user creation form
     res.render('createUser', {
         title: 'Create a User'
     });
-}
+};
 
 exports.createAUser = (req, res) => { //after user fills out user creation form
     bcrypt.hash(req.body.password, null, null, (err, hash) => {
@@ -53,8 +53,8 @@ exports.createAUser = (req, res) => { //after user fills out user creation form
                 res.redirect('/seeUsers');
             });
         });
-    })
-}
+    });
+};
 
 exports.updateUserPage = (req, res) => { //taking user to user creation form
     var validCheck = false;
@@ -72,8 +72,8 @@ exports.updateUserPage = (req, res) => { //taking user to user creation form
         if(validCheck == false){
             res.redirect('/seeUsers');
         }
-    })
-}
+    });
+};
 
 exports.updateUserDetails = (req, res) => { //after user fills out user creation form
     fs.readFile('config.json', (err, data) => {
@@ -93,12 +93,12 @@ exports.updateUserDetails = (req, res) => { //after user fills out user creation
                             console.log(err);
                         }
                         res.redirect('/seeUsers');
-                    })
+                    });
                 });
             }
         });
-    })
-}
+    });
+};
 
 exports.deleteUser = (req, res) => { //deletes user with id parameter
     //end user session
@@ -113,9 +113,8 @@ exports.deleteUser = (req, res) => { //deletes user with id parameter
                         console.log(err);
                     }
                     res.redirect('/seeUsers');
-                })
+                });
             }
         });
-        // res.redirect('/seeUsers');
-    })
-}
+    });
+};
