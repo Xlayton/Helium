@@ -1,8 +1,22 @@
 const bcrypt = require('bcrypt-nodejs');
 const fs= require('fs');
+const uNav = require("../util/u_nav");
+const lNav = require("../util/l_nav");
 
-const _render = (res, fileName, title, opts) => {
-
+/**
+ * Renders a page to a response
+ * @param {Object} res - Response to render to
+ * @param {String} fileName - Name of view to render
+ * @param {String} title - Title of page
+ * @param {Object} opts - Any additional options to pass into render
+ */
+const _render = (res, fileName, title, nav, opts) => {
+    let options = {
+        title: title,
+        nav: nav,
+        ...opts
+    }
+    res.render(fileName, options);
 };
 
 const viewUsers = (req, res) => {
@@ -12,20 +26,15 @@ const viewUsers = (req, res) => {
         }
         var jsonData = data;
         var jsonParsed = JSON.parse(jsonData);
-        res.render('viewUsers', {
-            "title": 'See All Users',
-            "userData": jsonParsed
-        });
+        _render(res, 'viewUsers', 'View All Users', {"userData": jsonParsed});
     });
 };
 
-const createUserPage = (req, res) => { //taking user to user creation form
-    res.render('createUser', {
-        title: 'Create a User'
-    });
+const createUserPage = (req, res) => {
+    _render(res, 'createUser', "Create a User");
 };
 
-const createAUser = (req, res) => { //after user fills out user creation form
+const createAUser = (req, res) => {
     bcrypt.hash(req.body.password, null, null, (err, hash) => {
         var myHash = hash;
         let user = {
@@ -57,10 +66,7 @@ const updateUserPage = (req, res) => { //taking user to user creation form
         jsonData.users.forEach(user => {
             if(user.id == req.params.id){
                 validCheck = true;
-                res.render('updateUser', {
-                    "title": 'Update a User',
-                    "account": user
-                });
+                _render(res,'updateUser', "Update a User", {"account": user});
             }
         });
         if(validCheck == false){
@@ -115,10 +121,10 @@ const deleteUser = (req, res) => { //deletes user with id parameter
 };
 
 const getIndex = (req, res) => {
-    res.render("landingPage");
+    _render(res, "landingPage", "Helium", uNav);
 };
 
-exports = {
+module.exports = {
     viewUsers: viewUsers,
     createUserPage: createUserPage,
     createAUser: createAUser,
