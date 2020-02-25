@@ -30,6 +30,7 @@ var urlencodedParser = bodyParser.urlencoded({
     extended: false
 });
 
+app.get("/", route.getIndex);
 app.get('/seeUsers', route.viewUsers);
 app.get('/createUser', route.createUserPage);
 app.post('/createUser',urlencodedParser, route.createAUser);
