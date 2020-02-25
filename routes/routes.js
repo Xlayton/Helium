@@ -1,7 +1,11 @@
 const bcrypt = require('bcrypt-nodejs');
 const fs= require('fs');
 
-exports.viewUsers = (req, res) => {
+const _render = (res, fileName, title, opts) => {
+
+};
+
+const viewUsers = (req, res) => {
     fs.readFile("config.json", (err, data) => {
         if(err){
             console.log(err);
@@ -15,13 +19,13 @@ exports.viewUsers = (req, res) => {
     });
 };
 
-exports.createUserPage = (req, res) => { //taking user to user creation form
+const createUserPage = (req, res) => { //taking user to user creation form
     res.render('createUser', {
         title: 'Create a User'
     });
 };
 
-exports.createAUser = (req, res) => { //after user fills out user creation form
+const createAUser = (req, res) => { //after user fills out user creation form
     bcrypt.hash(req.body.password, null, null, (err, hash) => {
         var myHash = hash;
         let user = {
@@ -46,7 +50,7 @@ exports.createAUser = (req, res) => { //after user fills out user creation form
     });
 };
 
-exports.updateUserPage = (req, res) => { //taking user to user creation form
+const updateUserPage = (req, res) => { //taking user to user creation form
     var validCheck = false;
     fs.readFile('config.json', (err, data) => {
         var jsonData = JSON.parse(data);
@@ -65,7 +69,7 @@ exports.updateUserPage = (req, res) => { //taking user to user creation form
     });
 };
 
-exports.updateUserDetails = (req, res) => { //after user fills out user creation form
+const updateUserDetails = (req, res) => { //after user fills out user creation form
     fs.readFile('config.json', (err, data) => {
         var jsonData = JSON.parse(data);
         jsonData.users.forEach(user => {
@@ -90,7 +94,7 @@ exports.updateUserDetails = (req, res) => { //after user fills out user creation
     });
 };
 
-exports.deleteUser = (req, res) => { //deletes user with id parameter
+const deleteUser = (req, res) => { //deletes user with id parameter
     //end user session
     fs.readFile('config.json', (err, data) => {
         var jsonData = JSON.parse(data);
@@ -110,6 +114,16 @@ exports.deleteUser = (req, res) => { //deletes user with id parameter
     });
 };
 
-exports.getIndex = (req, res) => {
+const getIndex = (req, res) => {
     res.render("landingPage");
+};
+
+exports = {
+    viewUsers: viewUsers,
+    createUserPage: createUserPage,
+    createAUser: createAUser,
+    updateUserPage: updateUserPage,
+    updateUserDetails: updateUserDetails,
+    deleteUser: deleteUser,
+    getIndex: getIndex
 };
