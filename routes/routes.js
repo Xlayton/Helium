@@ -109,3 +109,7 @@ exports.deleteUser = (req, res) => { //deletes user with id parameter
         });
     });
 };
+
+exports.getIndex = (req, res) => {
+    res.render("landingPage");
+};
