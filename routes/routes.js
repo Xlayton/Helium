@@ -3,8 +3,6 @@ const bcrypt = require('bcrypt-nodejs');
 const fs = require('fs');
 const uNav = require("../util/u_nav");
 const lNav = require("../util/l_nav");
-const WSPORT = process.env.WSPORT;
-const HOSTNAME = process.env.HOSTNAME;
 
 var websocketList = [];
 /**
