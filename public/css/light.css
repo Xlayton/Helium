@@ -11,9 +11,7 @@ html,body {
     height:100%;
     margin:0;
     padding:0;
-}
-html,body::-webkit-scrollbar {
-    display:hidden;
+    overflow:hidden;
 }
 .sidebar {
     background-color: #e8e8e8;
@@ -41,6 +39,7 @@ html,body::-webkit-scrollbar {
     background-color:#efefef;
 }
 .input-section {
+    position:sticky;
     display:flex;
     width: 100%;
     grid-area: msg-box;
@@ -54,14 +53,16 @@ html,body::-webkit-scrollbar {
 .msg-button {
     flex-grow:1;
 }
-.msg-container {
+.msg-section {
     overflow-y: scroll;
+    word-wrap: break-word;
+    max-height:95vh;
 }
-.msg-container::-webkit-scrollbar {
+.msg-section::-webkit-scrollbar {
     width:10px;
     margin-right:1px;
 }
-.msg-container::-webkit-scrollbar-thumb {
+.msg-section::-webkit-scrollbar-thumb {
     background: #dcdcdc;
     border-radius: 50px;
     border: 2px solid #efefef;
