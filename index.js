@@ -14,6 +14,7 @@ const db = require('./db/createSchema');
 // you can test in here using db :)
 
 const app = express();
+const expressWs = require("express-ws")(app);
 app.use(express.static(path.join(__dirname+'/public')));
 
 app.set('view engine', 'pug');
@@ -37,6 +38,7 @@ app.post('/createUser',urlencodedParser, route.createAUser);
 app.get('/updateUser/:id', route.updateUserPage);
 app.post('/updateUser/:id', urlencodedParser,route.updateUserDetails);
 app.get('/deleteUser/:id', route.deleteUser);
+app.ws("/makeConnection", route.makeConnection);
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");

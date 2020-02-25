@@ -1,5 +1,5 @@
 //Frontend user
-var socket = new WebSocket("ws://localhost:3000");
+var socket = new WebSocket("ws://" + window.location.origin.substring(5) + "/makeConnection");
 socket.onmessage = function(e) {
     document.getElementById("display").innerHTML += "<p>" + e.data + "</p>";
 };

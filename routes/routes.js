@@ -1,8 +1,12 @@
+require("dotenv").config();
 const bcrypt = require('bcrypt-nodejs');
-const fs= require('fs');
+const fs = require('fs');
 const uNav = require("../util/u_nav");
 const lNav = require("../util/l_nav");
+const WSPORT = process.env.WSPORT;
+const HOSTNAME = process.env.HOSTNAME;
 
+var websocketList = [];
 /**
  * Renders a page to a response
  * @param {Object} res - Response to render to
@@ -15,18 +19,18 @@ const _render = (res, fileName, title, nav, opts) => {
         title: title,
         nav: nav,
         ...opts
-    }
+    };
     res.render(fileName, options);
 };
 
 const viewUsers = (req, res) => {
     fs.readFile("config.json", (err, data) => {
-        if(err){
+        if (err) {
             console.log(err);
         }
         var jsonData = data;
         var jsonParsed = JSON.parse(jsonData);
-        _render(res, 'viewUsers', 'View All Users', {"userData": jsonParsed});
+        _render(res, 'viewUsers', 'View All Users', { "userData": jsonParsed });
     });
 };
 
@@ -50,7 +54,7 @@ const createAUser = (req, res) => {
             jsonParsed.users.push(user);
             var jsonContent = JSON.stringify(jsonParsed);
             fs.writeFile('config.json', jsonContent, (err) => {
-                if(err){
+                if (err) {
                     console.log(err);
                 }
                 res.redirect('/seeUsers');
@@ -64,12 +68,12 @@ const updateUserPage = (req, res) => { //taking user to user creation form
     fs.readFile('config.json', (err, data) => {
         var jsonData = JSON.parse(data);
         jsonData.users.forEach(user => {
-            if(user.id == req.params.id){
+            if (user.id == req.params.id) {
                 validCheck = true;
-                _render(res,'updateUser', "Update a User", {"account": user});
+                _render(res, 'updateUser', "Update a User", { "account": user });
             }
         });
-        if(validCheck == false){
+        if (validCheck == false) {
             res.redirect('/seeUsers');
         }
     });
@@ -79,8 +83,8 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
     fs.readFile('config.json', (err, data) => {
         var jsonData = JSON.parse(data);
         jsonData.users.forEach(user => {
-            if(user.id == req.params.id){
-                bcrypt.hash(req.body.password, null, null, (err, hash) =>{
+            if (user.id == req.params.id) {
+                bcrypt.hash(req.body.password, null, null, (err, hash) => {
                     var myHash = hash;
                     user.id = req.body.userId;
                     user.username = req.body.username;
@@ -89,7 +93,7 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
                     user.icon = req.body.icon;
                     var jsonContent = JSON.stringify(jsonData);
                     fs.writeFile('config.json', jsonContent, (err) => {
-                        if(err){
+                        if (err) {
                             console.log(err);
                         }
                         res.redirect('/seeUsers');
@@ -105,11 +109,11 @@ const deleteUser = (req, res) => { //deletes user with id parameter
     fs.readFile('config.json', (err, data) => {
         var jsonData = JSON.parse(data);
         jsonData.users.forEach(user => {
-            if(user.id == req.params.id){
+            if (user.id == req.params.id) {
                 jsonData.users.splice(jsonData.users.indexOf(user), 1);
                 var jsonContent = JSON.stringify(jsonData);
                 fs.writeFile('config.json', jsonContent, (err) => {
-                    if(err){
+                    if (err) {
                         console.log(err);
                     }
                     res.redirect('/seeUsers');
@@ -124,6 +128,20 @@ const getIndex = (req, res) => {
     _render(res, "landingPage", "Helium", uNav);
 };
 
+const makeConnection = (ws, head) => {
+    console.log("Connection made");
+    websocketList.push(ws);
+    ws.on('message', function incoming(message) {
+        console.log('received: %s', message);
+        websocketList.forEach(ws => {
+            ws.send(message);
+        });
+        ws.on('close', function close() {
+            console.log("closed");
+        });
+    });
+};
+
 module.exports = {
     viewUsers: viewUsers,
     createUserPage: createUserPage,
@@ -131,5 +149,6 @@ module.exports = {
     updateUserPage: updateUserPage,
     updateUserDetails: updateUserDetails,
     deleteUser: deleteUser,
-    getIndex: getIndex
+    getIndex: getIndex,
+    makeConnection: makeConnection
 };
