@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt-nodejs');
 const pg = require('pg');
 const fs= require('fs');
+const schema = require('../db/createSchema.js');
 
 // var connectionString = "postgres://postgres:pa55w0rd@'PostgreSQL 12'/ip:8815/testDatabase";
 // var pgClient = new pg.Client(connectionString);
@@ -36,7 +37,7 @@ exports.createAUser = (req, res) => { //after user fills out user creation form
         var myHash = hash;
         let user = {
             id: req.body.userId,
-            username: req.body.username,
+            name: req.body.username,
             password: myHash,
             email: req.body.email,
             icon: null
@@ -82,18 +83,27 @@ exports.updateUserDetails = (req, res) => { //after user fills out user creation
             if(user.id == req.params.id){
                 bcrypt.hash(req.body.password, null, null, (err, hash) =>{
                     var myHash = hash;
-                    user.id = req.body.userId;
-                    user.username = req.body.username;
-                    user.password = myHash;
-                    user.email = req.body.email;
-                    user.icon = req.body.icon;
-                    var jsonContent = JSON.stringify(jsonData);
-                    fs.writeFile('config.json', jsonContent, (err) => {
-                        if(err){
-                            console.log(err);
-                        }
-                        res.redirect('/seeUsers');
-                    })
+                    let updatedUser = {
+                        id: req.body.userId,
+                        name: req.body.username,
+                        password: myHash,
+                        email: req.body.email,
+                        icon: req.body.icon
+                    };
+                    schema.updateUser(user, updatedUser);
+                    res.redirect('/seeUsers');
+                    // user.id = req.body.userId;
+                    // user.name = req.body.username;
+                    // user.password = myHash;
+                    // user.email = req.body.email;
+                    // user.icon = req.body.icon;
+                    // var jsonContent = JSON.stringify(jsonData);
+                    // fs.writeFile('config.json', jsonContent, (err) => {
+                    //     if(err){
+                    //         console.log(err);
+                    //     }
+                    //     res.redirect('/seeUsers');
+                    // })
                 });
             }
         });
