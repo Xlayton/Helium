@@ -118,7 +118,7 @@ const getIndex = (req, res) => {
     res.render("landingPage");
 };
 
-exports = {
+module.exports = {
     viewUsers: viewUsers,
     createUserPage: createUserPage,
     createAUser: createAUser,
