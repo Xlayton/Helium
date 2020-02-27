@@ -11,13 +11,13 @@ html,body {
     height:100%;
     margin:0;
     padding:0;
-    background-color: #676767;
+    background-color: #dcdcdc;
 }
 html,body::-webkit-scrollbar {
     display:hidden;
 }
 .sidebar {
-    background-color: #a2a2a2;
+    background-color: #e8e8e8;
     grid-area: sidebar;
     height: 100%;
     width: 100%;
@@ -27,7 +27,7 @@ html,body::-webkit-scrollbar {
     width:100%;
     justify-content: space-evenly;
     font-size: 3vh;
-    background-color:#3d3d3d;
+    background-color:#efefef;
     max-height: 5vh;
 }
 .nav-link {
@@ -38,11 +38,11 @@ html,body::-webkit-scrollbar {
     text-align:center;
 }
 .nav-link:hover {
-    background-color: #a2a2a2;
+    background-color: #e8e8e8;
 }
 .nav-link:active {
-    background-color: #676767;
-    border: 2px solid #3d3d3d;
+    background-color: #dcdcdc;
+    border: 2px solid #efefef;
 }
 .title-section {
     display:flex;
@@ -56,6 +56,9 @@ html,body::-webkit-scrollbar {
     width: auto;
     float:left;
     padding: 0;
+}
+.main-logo:hover {
+    cursor: pointer;
 }
 .title {
     color: #efefef;
@@ -90,7 +93,7 @@ html,body::-webkit-scrollbar {
     display: flex;
     flex-flow: column;
     width: 50%;
-    background-color:#a2a2a2;
+    background-color:#e8e8e8;
     height: 75%;
     justify-content: center;
     justify-items: center;
@@ -101,11 +104,11 @@ html,body::-webkit-scrollbar {
 .form input {
     margin-top: 1vh;
     border: none;
-    border-bottom: 1px solid #3d3d3d;
+    border-bottom: 1px solid #efefef;
     background-color: transparent;
 }
 .form input:focus {
-    background-color: #676767;
+    background-color: #dcdcdc;
     color: #efefef;
 }
 #btn {

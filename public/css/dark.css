@@ -56,6 +56,9 @@ html,body::-webkit-scrollbar {
     float:left;
     padding: 0;
 }
+.main-logo:hover {
+    cursor: pointer;
+}
 .title {
     color: #efefef;
     font-size: 15vh;
