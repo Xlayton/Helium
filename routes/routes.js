@@ -1,33 +1,37 @@
+require("dotenv").config();
 const bcrypt = require('bcrypt-nodejs');
-const pg = require('pg');
-const fs= require('fs');
-const schema = require('../db/createSchema.js');
+const fs = require('fs');
+const uNav = require("../util/u_nav");
+const lNav = require("../util/l_nav");
 
-// var connectionString = "postgres://postgres:pa55w0rd@'PostgreSQL 12'/ip:8815/testDatabase";
-// var pgClient = new pg.Client(connectionString);
-// pgClient.connect();
+var websocketList = [];
+/**
+ * Renders a page to a response
+ * @param {Object} res - Response to render to
+ * @param {String} fileName - Name of view to render
+ * @param {String} title - Title of page
+ * @param {Object} opts - Any additional options to pass into render
+ */
+const _render = (res, fileName, title, nav, opts) => {
+    let options = {
+        title: title,
+        nav: nav,
+        ...opts
+    };
+    res.render(fileName, options);
+};
 
-// var query = pgClient.query("Select * from 'Users'");
-// query.on("row", function(row, result){
-//     result.addRow("row");
-// })
-
-exports.viewUsers = (req, res) => {
+const viewUsers = (req, res) => {
     schema.getAllUsers().then(users => {
-        res.render('viewUsers', {
-            "title": 'View All Users',
-            "userData": users
-        })
+        _render(res, 'viewUsers', 'View All Users', { "userData": users });
     });
-}
+};
 
-exports.createUserPage = (req, res) => { //taking user to user creation form
-    res.render('createUser', {
-        title: 'Create a User'
-    });
-}
+const createUserPage = (req, res) => {
+    _render(res, 'createUser', "Create a User");
+};
 
-exports.createAUser = (req, res) => { //after user fills out user creation form
+const createAUser = (req, res) => {
     bcrypt.hash(req.body.password, null, null, (err, hash) => {
         var myHash = hash;
         let user = {
@@ -42,16 +46,13 @@ exports.createAUser = (req, res) => { //after user fills out user creation form
     })
 }
 
-exports.updateUserPage = (req, res) => { //taking user to user creation form
+const updateUserPage = (req, res) => { //taking user to user creation form
     schema.getUser(req.params.id).then(user => {
-        res.render('updateUser', {
-            "title": "Update a User",
-            "account": user
-        })
+        _render(res, 'updateUser', 'Update a User', {"account": user});
     });
 }
 
-exports.updateUserDetails = (req, res) => { //after user fills out user creation form
+const updateUserDetails = (req, res) => { //after user fills out user creation form
     schema.getUser(req.params.id).then(user => {
         bcrypt.hash(req.body.password, null, null, (err, hash) =>{
             var myHash = hash;
@@ -68,7 +69,7 @@ exports.updateUserDetails = (req, res) => { //after user fills out user creation
     });
 }
 
-exports.deleteUser = (req, res) => { //deletes user with id parameter
+const deleteUser = (req, res) => { //deletes user with id parameter
     //end user session
     schema.getUser(req.params.id).then(user => {
         schema.removeUser(user);
