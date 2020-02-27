@@ -10,12 +10,14 @@ var websocketList = [];
  * @param {Object} res - Response to render to
  * @param {String} fileName - Name of view to render
  * @param {String} title - Title of page
+ * @param {String} style - Theme to use
  * @param {Object} opts - Any additional options to pass into render
  */
-const _render = (res, fileName, title, nav, opts) => {
+const _render = (res, fileName, title, nav, style, opts) => {
     let options = {
         title: title,
         nav: nav,
+        style: style,
         ...opts
     };
     res.render(fileName, options);
@@ -28,12 +30,12 @@ const viewUsers = (req, res) => {
         }
         var jsonData = data;
         var jsonParsed = JSON.parse(jsonData);
-        _render(res, 'viewUsers', 'View All Users', { "userData": jsonParsed });
+        _render(res, 'viewUsers', 'View All Users', uNav, "dark", { "userData": jsonParsed });
     });
 };
 
 const createUserPage = (req, res) => {
-    _render(res, 'createUser', "Create a User");
+    _render(res, 'createUser', "Create a User", uNav, "dark");
 };
 
 const createAUser = (req, res) => {
@@ -68,7 +70,7 @@ const updateUserPage = (req, res) => { //taking user to user creation form
         jsonData.users.forEach(user => {
             if (user.id == req.params.id) {
                 validCheck = true;
-                _render(res, 'updateUser', "Update a User", { "account": user });
+                _render(res, 'updateUser', "Update a User", lNav, "dark",{ "account": user });
             }
         });
         if (validCheck == false) {
@@ -123,7 +125,7 @@ const deleteUser = (req, res) => { //deletes user with id parameter
 };
 
 const getIndex = (req, res) => {
-    _render(res, "landingPage", "Helium", uNav);
+    _render(res, "landingPage", "Helium", uNav, "dark");
 };
 
 const makeConnection = (ws, head) => {
