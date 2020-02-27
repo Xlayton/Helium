@@ -4,6 +4,8 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title #{title}
     body
-        header(class="nav")
+        nav(class="nav")
             each text, link in nav
                 a(class="nav-link" href=text) #{link}
+        section(class="main-content")
+            block main-content
