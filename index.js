@@ -12,8 +12,15 @@ const fs = require('fs');
 const PORT = process.env.PORT;
 
 const db = require('./db/createSchema');
+// db.addUser({
+//     id: 3,
+//     name: "User",
+//     email: "Email",
+//     icon: "Icon",
+//     password: "Password"
+// })
 // db.getAllUsers().then(res => console.log(res));
-db.getUser(0).then(res => console.log(res));
+// db.getUser(3).then(res => console.log(res));
 
 const app = express();
 app.use(express.static(path.join(__dirname+'/public')));
