@@ -23,7 +23,7 @@ app.set('views', __dirname + '/views');
 
 app.use(express.static(path.join(__dirname + '/public')));
 app.use(expressSession({
-    secret: 'pass',
+    secret: process.env.SECRET,
     saveUninitialized: true,
     resave: true
 }));
