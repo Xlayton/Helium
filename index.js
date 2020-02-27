@@ -7,7 +7,6 @@ const path = require('path');
 const expressSession = require('express-session');
 const bcrypt = require('bcrypt-nodejs');
 const bodyParser = require('body-parser');
-const pg = require('pg');
 const fs = require('fs');
 const PORT = process.env.PORT;
 
@@ -16,6 +15,7 @@ const db = require('./db/createSchema');
 db.getUser(0).then(res => console.log(res));
 
 const app = express();
+const expressWs = require("express-ws")(app);
 app.use(express.static(path.join(__dirname+'/public')));
 
 app.set('view engine', 'pug');
@@ -32,12 +32,14 @@ var urlencodedParser = bodyParser.urlencoded({
     extended: false
 });
 
+app.get("/", route.getIndex);
 app.get('/seeUsers', route.viewUsers);
 app.get('/createUser', route.createUserPage);
 app.post('/createUser',urlencodedParser, route.createAUser);
 app.get('/updateUser/:id', route.updateUserPage);
 app.post('/updateUser/:id', urlencodedParser,route.updateUserDetails);
 app.get('/deleteUser/:id', route.deleteUser);
+app.ws("/makeConnection", route.makeConnection);
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
