@@ -12,13 +12,15 @@ const fs = require('fs');
 const http = require('http');
 const PORT = process.env.PORT;
 
+//require('./db/db').createAllTables(process.env.PASSWORD);
+//require('./db/db').dropAllTables(process.env.PASSWORD);
 
 const app = express();
 app.use(express.static(path.join(__dirname+'/public')));
 
 const httpServer = http.createServer(app);
-httpServer.listen(PORT + 1, () => {
-    console.log(`Server Listening on port: ${PORT + 1}`)
+httpServer.listen(parseInt(PORT) + 1, () => {
+    console.log(`Server Listening on port: ${parseInt(PORT) + 1}`)
 });
 
 app.set('view engine', 'pug');
