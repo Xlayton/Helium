@@ -46,6 +46,9 @@ app.post('/createUser',urlencodedParser, route.createAUser);
 app.get('/updateUser/:id', route.updateUserPage);
 app.post('/updateUser/:id', urlencodedParser,route.updateUserDetails);
 app.get('/deleteUser/:id', route.deleteUser);
+app.get('/signIn', route.signIn);
+app.post('/signIn', urlencodedParser, route.signUserIn);
+app.get('/signOut/:id', route.signUserOut);
 app.ws("/makeConnection", route.makeConnection);
 
 app.use((req, res, next) => {
