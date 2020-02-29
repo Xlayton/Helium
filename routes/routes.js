@@ -75,4 +75,40 @@ const deleteUser = (req, res) => { //deletes user with id parameter
         schema.removeUser(user);
         res.redirect('/seeUsers')
     });
-}
+};
+
+const getIndex = (req, res) => {
+    _render(res, "landingPage", "Helium", uNav);
+};
+
+const makeConnection = (ws, head) => {
+    console.log("Connection made")
+    websocketList.push(ws);
+      ws.on('message', function incoming(message) {
+        console.log('received: %s', message);
+        websocketList.forEach(ws => {
+          ws.send(message);
+        });
+      //Removes that a user has disconnected, should display name when users are added
+      ws.on('close', function close() {
+        if(websocketList.includes(ws)) {
+          websocketList = websocketList.filter((cli) => cli !== ws)
+          websocketList.forEach(bye => {
+            bye.send("User Disconnected");
+          });
+          console.log(websocketList.length);
+        }
+      });
+      });   
+};
+
+module.exports = {
+    viewUsers: viewUsers,
+    createUserPage: createUserPage,
+    createAUser: createAUser,
+    updateUserPage: updateUserPage,
+    updateUserDetails: updateUserDetails,
+    deleteUser: deleteUser,
+    getIndex: getIndex,
+    makeConnection: makeConnection
+};
