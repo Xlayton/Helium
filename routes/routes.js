@@ -124,17 +124,21 @@ const signUserIn = (req, res) => {
 }
 
 const signUserOut = (req, res) => {
-    if(req.params.id == req.session.user.id){
-        req.session.destroy(err => {
-            if(err){
-                console.log(err)
-            }
-            else{
-                res.redirect('/seeUsers')
-            }
-        })
-    }
-    else{
+    try {   
+        if(req.params.id == req.session.user.id){
+            req.session.destroy(err => {
+                if(err){
+                    console.log(err)
+                }
+                else{
+                    res.redirect('/seeUsers')
+                }
+            })
+        }
+        else{
+            res.redirect('/seeUsers');
+        }
+    } catch (error) {
         res.redirect('/seeUsers');
     }
 }
