@@ -17,13 +17,13 @@ exports.getAllUsers = async () => {
         .catch(err => console.error(err));
 };
 
-exports.addUser = (user) => {
+exports.addUser = user => {
     pool
     .query(`insert into users(id,name,email,icon,password) values(${user.id},'${user.name}','${user.email}','${user.icon}','${user.password}')`)
     .catch(err => console.error(err));
 };
 
-exports.removeUser = (user) => {
+exports.removeUser = user => {
     pool
     .query(`delete from users where id = ${user.id}`)
     .catch(err => console.error(err));
@@ -35,9 +35,38 @@ exports.updateUser = (user, newUser) => {
     .catch(err => console.error(err));
 };
 
-exports.getUser = async (id) => {
+exports.getUser = async id => {
     return pool
     .query(`select * from users where id=${id}`)
     .then(res => res.rows[0])
     .catch(err => console.error(err));
 };
+
+exports.createAllTables = password => {
+    if(password !== process.env.PASSWORD) {
+        return;
+    } else {
+        pool.query('create table channels(id bigint NOT NULL PRIMARY KEY,name text NOT NULL,messages bigint[],users bigint[],roles bigint[],permissions text)').catch(err => console.log(err))
+        pool.query('create table chatrooms(id bigint NOT NULL PRIMARY KEY,name text NOT NULL,icon text,visibility boolean NOT NULL,channels bigint[],users bigint[],roles bigint[],emojis bigint[])').catch(err => console.log(err))
+        pool.query('create table emojis(id bigint NOT NULL PRIMARY KEY,img text NOT NULL,name text NOT NULL)').catch(err => console.log(err))
+        pool.query('create table messages(id bigint NOT NULL PRIMARY KEY,msg text NOT NULL,usr bigint NOT NULL,reactions bigint[])').catch(err => console.log(err))
+        pool.query('create table reactions(id bigint NOT NULL PRIMARY KEY,emoji bigint NOT NULL,usr bigint NOT NULL)').catch(err => console.log(err))
+        pool.query('create table roles(id bigint NOT NULL PRIMARY KEY,name text NOT NULL,color text,permission bigint NOT NULL)').catch(err => console.log(err))
+        pool.query('create table users(id bigint NOT NULL PRIMARY KEY,name text NOT NULL,email text NOT NULL,icon text,password text NOT NULL)').catch(err => console.log(err))
+    }
+}
+
+
+exports.dropAllTables = password => {
+    if(password !== process.env.PASSWORD) {
+        return;
+    } else {
+        pool.query('drop table channels').catch(err => console.log(err))
+        pool.query('drop table chatrooms').catch(err => console.log(err))
+        pool.query('drop table emojis').catch(err => console.log(err))
+        pool.query('drop table messages').catch(err => console.log(err))
+        pool.query('drop table reactions').catch(err => console.log(err))
+        pool.query('drop table roles').catch(err => console.log(err))
+        pool.query('drop table users').catch(err => console.log(err))
+    }
+}

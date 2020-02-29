@@ -3,13 +3,13 @@ class Message {
     /**
      * 
      * @param {Number} id 
-     * @param {String} text 
+     * @param {String} msg 
      * @param {User} user 
      * @param {Reaction[]} reactions 
      */
-    constructor(id,text,user,reactions) {
+    constructor(id,msg,user,reactions) {
         this.id = id;
-        this.text = text;
+        this.msg = msg;
         this.user = user;
         this.reactions = reactions;
     }

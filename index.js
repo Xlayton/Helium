@@ -12,8 +12,8 @@ const fs = require('fs');
 const http = require('http');
 const PORT = process.env.PORT;
 
-//require('./db/db').createAllTables(process.env.PASSWORD);
-//require('./db/db').dropAllTables(process.env.PASSWORD);
+// require('./db/db').dropAllTables(process.env.PASSWORD);
+// require('./db/db').createAllTables(process.env.PASSWORD);
 
 const app = express();
 app.use(express.static(path.join(__dirname+'/public')));
