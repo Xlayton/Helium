@@ -2,10 +2,10 @@ html
     body
         div(class="content")
             form(id='update' method='POST' action="/updateUser/"+account.id onsubmit="return checkUpdate()" class='form')
-                p Id:&nbsp;
-                    input(type='text' id='IdUpdate' name="userId" value=account.id)
+                //- p Id:&nbsp;
+                //-     input(type='text' id='IdUpdate' name="userId" value=account.id)
                 p Username:&nbsp;
-                    input(type='text' id='usernameUpdate' name="username" value=account.username)
+                    input(type='text' id='usernameUpdate' name="username" value=account.name)
                 p Password:&nbsp;
                     input(type='text' id='passwordUpdate' name="password")
                 p E-mail:&nbsp;
