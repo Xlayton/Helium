@@ -144,17 +144,24 @@ const getIndex = (req, res) => {
 };
 
 const makeConnection = (ws, head) => {
-    console.log("Connection made");
+    console.log("Connection made")
     websocketList.push(ws);
-    ws.on('message', function incoming(message) {
+      ws.on('message', function incoming(message) {
         console.log('received: %s', message);
         websocketList.forEach(ws => {
-            ws.send(message);
+          ws.send(message);
         });
-        ws.on('close', function close() {
-            console.log("closed");
-        });
-    });
+      //Removes that a user has disconnected, should display name when users are added
+      ws.on('close', function close() {
+        if(websocketList.includes(ws)) {
+          websocketList = websocketList.filter((cli) => cli !== ws)
+          websocketList.forEach(bye => {
+            bye.send("User Disconnected");
+          });
+          console.log(websocketList.length);
+        }
+      });
+      });   
 };
 
 module.exports = {
