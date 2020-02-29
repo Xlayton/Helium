@@ -96,7 +96,6 @@ const makeConnection = (ws, head) => {
         });
     });
 };
-
 module.exports = {
     viewUsers: viewUsers,
     createUserPage: createUserPage,
