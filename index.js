@@ -11,7 +11,7 @@ const pg = require('pg');
 const fs = require('fs');
 const PORT = process.env.PORT;
 
-const db = require('./db/createSchema');
+// const db = require('./db/db');
 // you can test in here using db :)
 
 const app = express();

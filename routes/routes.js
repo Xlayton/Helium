@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt-nodejs');
 const fs = require('fs');
 const uNav = require("../util/u_nav");
 const lNav = require("../util/l_nav");
-const schema = require("../db/createSchema.js");
+const schema = require("../db/db.js");
 
 var websocketList = [];
 /**
