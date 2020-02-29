@@ -111,6 +111,7 @@ body::-webkit-scrollbar {
     display: grid;
     grid-template-columns: 100px 10fr 90fr;
     grid-template-areas: "sidebar channels main-area";
+    height: 95vh;
 }
 
 .channel-area {

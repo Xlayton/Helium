@@ -50,13 +50,13 @@ const createAUser = (req, res) => {
 
 const updateUserPage = (req, res) => { //taking user to user creation form
     schema.getUser(req.params.id).then(user => {
-        _render(res, 'updateUser', 'Update a User', {"account": user});
+        _render(res, 'updateUser', 'Update a User', { "account": user });
     });
 };
 
 const updateUserDetails = (req, res) => { //after user fills out user creation form
     schema.getUser(req.params.id).then(user => {
-        bcrypt.hash(req.body.password, null, null, (err, hash) =>{
+        bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let updatedUser = {
                 id: req.body.userId,
