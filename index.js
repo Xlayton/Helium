@@ -9,13 +9,17 @@ const bcrypt = require('bcrypt-nodejs');
 const bodyParser = require('body-parser');
 const pg = require('pg');
 const fs = require('fs');
+const http = require('http');
 const PORT = process.env.PORT;
 
-// const db = require('./db/db');
-// you can test in here using db :)
 
 const app = express();
 app.use(express.static(path.join(__dirname+'/public')));
+
+const httpServer = http.createServer(app);
+httpServer.listen(PORT + 1, () => {
+    console.log(`Server Listening on port: ${PORT + 1}`)
+});
 
 app.set('view engine', 'pug');
 const expressWs = require("express-ws")(app);
@@ -29,13 +33,16 @@ app.use(expressSession({
 var urlencodedParser = bodyParser.urlencoded({
     extended: false
 });
+const upload = multer({
+    dest: '/temp'
+});
 
 app.get("/", route.getIndex);
 app.get('/seeUsers', route.viewUsers);
 app.get('/createUser', route.createUserPage);
 app.post('/createUser',urlencodedParser, route.createAUser);
 app.get('/updateUser/:id', route.updateUserPage);
-app.post('/updateUser/:id', urlencodedParser,route.updateUserDetails);
+app.post('/updateUser/:id', urlencodedParser, upload.single('icon'), route.updateUserDetails);
 app.get('/deleteUser/:id', route.deleteUser);
 app.get('/signIn', route.signIn);
 app.post('/signIn', urlencodedParser, route.signUserIn);

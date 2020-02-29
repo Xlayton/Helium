@@ -73,6 +73,16 @@ const updateUserPage = (req, res) => { //taking user to user creation form
 
 const updateUserDetails = (req, res) => { //after user fills out user creation form
     schema.getUser(req.params.id).then(user => {
+
+    // https://stackoverflow.com/questions/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
+    if(!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
+    const tempPath = req.icon /* name of the input field */.path;
+    const targetPath = path.join(__dirname, 'temp/avatar.png'); // new path for temp file
+    fs.renameSync(tempPath, targetPath) // "moves" the file
+    let file = fs.readFileSync(targetPath); // reads the new file
+    let b64String = file.toString('base64'); // gets the base64 string representation 
+    fs.unlink(targetPath, err => console.log(err)); // deletes the new file
+
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let updatedUser = {
@@ -80,7 +90,7 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
                 name: req.body.username,
                 password: myHash,
                 email: req.body.email,
-                icon: req.body.icon
+                icon: b64String
             };
             schema.updateUser(user, updatedUser);
             res.redirect('/seeUsers');
