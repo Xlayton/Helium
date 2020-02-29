@@ -3,10 +3,12 @@ html(lang="en")
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         link(type="text/css" rel="stylesheet" href=`css/${style}.css`)
+        link(type="text/css" rel="stylesheet" href=`css/layout.css`)
         title #{title}
     body
         nav(class="nav")
-            img(class="main-logo" src="img/white.png")
+            a(class="nav-link" href="/") 
+                img(class="main-logo" src="img/white.png")
             each text, link in nav
                 a(class="nav-link" href=text) #{link}
         section(class="main-content")

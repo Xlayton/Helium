@@ -1,1 +1,11 @@
 extends layout
+block main-content
+    section(class="chatpage")
+        div(class="sidebar")
+        div(class="channel-area")
+        div(class="chat-area")
+            div(id="display" class="msg-section")
+            div(class="input-section")
+                input(id="input" class="msg-input" type="text" placeholder="Send Message...")
+                button(id="send" class="msg-button") Send
+    script(src="js/connection.js")
