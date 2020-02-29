@@ -37,10 +37,7 @@ html,body {
     background-color:#e8e8e8;
 }
 .form input {
-    margin-top: 1vh;
-    border: none;
     border-bottom: 1px solid #efefef;
-    background-color: transparent;
 }
 .form input:focus {
     background-color: #dcdcdc;
@@ -50,134 +47,39 @@ html,body {
     border: 1px solid #000;
     background-color: #000;
     color: #efefef;
-    padding: 5px;
-    border-radius: 10px;
 }
 
 .chatpage {
-    display:grid;
-    grid-template-columns: 100px 10fr 90fr;
-    grid-template-areas: "sidebar channels main-area";
     color: #000;
 }
 .channel-area {
-    grid-area: channels;
     background-color:#dcdcdc;
-    min-width: 150px;
 }
 .chat-area {
-    display:grid;
-    grid-template-rows: 95fr 5fr;
-    grid-template-areas: "chat" "msg-box";
-    grid-area: main-area;
     background-color:#efefef;
-}
-.input-section {
-    position:sticky;
-    display:flex;
-    width: 100%;
-    grid-area: msg-box;
-    flex-flow:row;
-    justify-content: stretch;
-}
-.msg-input{
-    flex-grow:8;
-    font-size: 14pt;
-}
-.msg-button {
-    flex-grow:1;
-}
-.msg-section {
-    overflow-y: scroll;
-    word-wrap: break-word;
-    max-height:95vh;
-}
-.msg-section::-webkit-scrollbar {
-    width:10px;
-    margin-right:1px;
 }
 .msg-section::-webkit-scrollbar-thumb {
     background: #dcdcdc;
-    border-radius: 50px;
     border: 2px solid #efefef;
 }
 
 .homepage {
-    display:grid;
-    grid-template-columns: 100px 95fr;
-    grid-template-areas: "sidebar main-area";
     color: #000;
 }
 .mainarea {
     background-color:#dcdcdc;
-    display: flex;
-    grid-area:main-area;
-    height:100%;
-    justify-content: center;
-    justify-items: center;
-    width:100%;
-    overflow: auto;
-}
-.content, .online-friends {
-    display:grid;
-    grid-template-rows: 10fr 90fr;
-    grid-template-areas: "title" "content";
-    height:100%;
-    width:100%;
 }
 .content {
     background-color: #efefef;
-    border-radius: 15px;
-    margin: 0 2vmin;
-}
-.page-title {
-    font-size: 5vmin;
-    grid-area: title;
-    text-align: center;
-}
-.online-friends {
-    grid-area: content;
-    overflow:auto;
 }
 .friends-container {
-    display: flex;
-    flex-flow: row;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    overflow: scroll;
-    overflow-x: hidden;
-    grid-area: content;
     border-top: 1px solid #DCDCDC;
-}
-.friends-container::-webkit-scrollbar {
-    width:10px;
-    margin-right:1px;
 }
 .friends-container::-webkit-scrollbar-thumb {
     background: #dcdcdc;
-    border-radius: 50px;
     border: 2px solid #efefef;
-}
-.friends-title {
-    font-size: 3vmin;
-    grid-area: title;
-    text-align:center;
-}
-.friend {
-    align-items: center;
-    display: flex;
-    flex-flow: row;
-    margin: 0 1vw;
 }
 .friend-image-container {
     border: .5px solid #000;
     background-color: #dcdcdc;
-    border-radius: 50%;
-    height: 50px;
-    width: 50px;
-    overflow:hidden;
-}
-.friend-image-container img {
-    max-width: 110%;
-    max-height: 110%;
 }

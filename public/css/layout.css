@@ -1,73 +1,91 @@
-html,body {
-    width:100%;
-    height:100%;
-    margin:0;
-    padding:0;
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
-html,body::-webkit-scrollbar {
-    display:hidden;
+
+html,
+body::-webkit-scrollbar {
+    display: hidden;
 }
+
 .sidebar {
     grid-area: sidebar;
     height: 100%;
     width: 100%;
 }
+
 .nav {
-    display:flex;
-    width:100%;
+    display: flex;
+    width: 100%;
     justify-content: space-evenly;
     font-size: 3vh;
     max-height: 5vh;
 }
+
 .nav-link {
     text-decoration: none;
     padding: 1vh 0;
-    width:100%;
-    text-align:center;
+    width: 100%;
+    text-align: center;
 }
+
+.nav> :first-child {
+    padding: 0;
+    width: auto;
+}
+
 .title-section {
-    display:flex;
+    display: flex;
     flex-flow: column;
     justify-content: center;
-    align-items:center;
+    align-items: center;
     margin: 2vh 0
 }
+
 .main-logo {
     height: 5vh;
     width: auto;
-    float:left;
+    float: left;
     padding: 0;
 }
+
 .main-logo:hover {
     cursor: pointer;
 }
+
 .title {
     font-size: 15vh;
-    margin:0;
+    margin: 0;
 }
+
 .sub-title {
-    margin-top:.5vh;
+    margin-top: .5vh;
     font-style: italic;
     font-size: 4vh;
-    margin:0;
+    margin: 0;
 }
+
 .form {
     display: flex;
     flex-flow: column;
     justify-content: center;
     justify-items: center;
     align-content: center;
-    align-items:center;
-    width:100%;
+    align-items: center;
+    width: 100%;
     height: 100%;
-
 }
+
 .form-title {
-    margin-top:.5vh;
+    margin-top: .5vh;
     font-style: italic;
     font-size: 4vh;
-    margin:0;
+    margin: 0;
 }
+
 .form-elements {
     display: flex;
     flex-flow: column;
@@ -76,6 +94,151 @@ html,body::-webkit-scrollbar {
     justify-content: center;
     justify-items: center;
     align-content: center;
-    align-items:center;
+    align-items: center;
     border-radius: 15px;
+}
+
+.form input {
+    margin-top: 1vh;
+}
+
+#btn {
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.chatpage {
+    display: grid;
+    grid-template-columns: 100px 10fr 90fr;
+    grid-template-areas: "sidebar channels main-area";
+}
+
+.channel-area {
+    grid-area: channels;
+    min-width: 150px;
+}
+
+.chat-area {
+    display: grid;
+    grid-template-rows: 95fr 5fr;
+    grid-template-areas: "chat" "msg-box";
+    grid-area: main-area;
+}
+
+.input-section {
+    position: sticky;
+    display: flex;
+    width: 100%;
+    grid-area: msg-box;
+    flex-flow: row;
+    justify-content: stretch;
+}
+
+.msg-input {
+    flex-grow: 8;
+    font-size: 14pt;
+}
+
+.msg-button {
+    flex-grow: 1;
+}
+
+.msg-section {
+    overflow-y: scroll;
+    word-wrap: break-word;
+    max-height: 95vh;
+}
+
+.msg-section::-webkit-scrollbar {
+    width: 10px;
+    margin-right: 1px;
+}
+
+.msg-section::-webkit-scrollbar-thumb {
+    border-radius: 50px;
+}
+
+.homepage {
+    display: grid;
+    grid-template-columns: 100px 95fr;
+    grid-template-areas: "sidebar main-area";
+}
+
+.mainarea {
+    display: flex;
+    grid-area: main-area;
+    height: 100%;
+    justify-content: center;
+    justify-items: center;
+    width: 100%;
+    overflow: auto;
+}
+
+.content,
+.online-friends {
+    display: grid;
+    grid-template-rows: 10fr 90fr;
+    grid-template-areas: "title" "content";
+    height: 100%;
+    width: 100%;
+}
+
+.content {
+    border-radius: 15px;
+    margin: 0 2vmin;
+}
+
+.page-title {
+    font-size: 5vmin;
+    grid-area: title;
+    text-align: center;
+}
+
+.online-friends {
+    grid-area: content;
+    overflow: auto;
+}
+
+.friends-container {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    overflow: scroll;
+    overflow-x: hidden;
+    grid-area: content;
+}
+
+.friends-container::-webkit-scrollbar {
+    width: 10px;
+    margin-right: 1px;
+}
+
+.friends-container::-webkit-scrollbar-thumb {
+    border-radius: 50px;
+}
+
+.friends-title {
+    font-size: 3vmin;
+    grid-area: title;
+    text-align: center;
+}
+
+.friend {
+    align-items: center;
+    display: flex;
+    flex-flow: row;
+    margin: 0 1vw;
+}
+
+.friend-image-container {
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    overflow: hidden;
+}
+
+.friend-image-container img {
+    max-width: 110%;
+    max-height: 110%;
 }
