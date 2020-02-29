@@ -132,13 +132,16 @@ const signUserOut = (req, res) => {
                 }
                 else{
                     res.redirect('/seeUsers')
+                    console.log("User signed out")
                 }
             })
         }
         else{
+            console.log("You are not the signed-in user");
             res.redirect('/seeUsers');
         }
     } catch (error) {
+        console.log("No one is logged in right now");
         res.redirect('/seeUsers');
     }
 }
