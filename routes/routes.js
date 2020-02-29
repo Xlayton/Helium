@@ -80,7 +80,7 @@ const deleteUser = (req, res) => { //deletes user with id parameter
 };
 
 const getIndex = (req, res) => {
-    _render(res, "chat", "Helium", uNav, "dark");
+    _render(res, "landingPage", "Helium", uNav, "dark");
 };
 
 const makeConnection = (ws, head) => {
