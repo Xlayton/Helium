@@ -7,25 +7,18 @@ const path = require('path');
 const expressSession = require('express-session');
 const bcrypt = require('bcrypt-nodejs');
 const bodyParser = require('body-parser');
+const pg = require('pg');
 const fs = require('fs');
 const PORT = process.env.PORT;
 
 const db = require('./db/createSchema');
-// db.addUser({
-//     id: 3,
-//     name: "User",
-//     email: "Email",
-//     icon: "Icon",
-//     password: "Password"
-// })
-// db.getAllUsers().then(res => console.log(res));
-// db.getUser(3).then(res => console.log(res));
+// you can test in here using db :)
 
 const app = express();
-const expressWs = require("express-ws")(app);
 app.use(express.static(path.join(__dirname+'/public')));
 
 app.set('view engine', 'pug');
+const expressWs = require("express-ws")(app);
 app.set('views', __dirname + '/views');
 
 app.use(express.static(path.join(__dirname + '/public')));
@@ -46,6 +39,9 @@ app.post('/createUser',urlencodedParser, route.createAUser);
 app.get('/updateUser/:id', route.updateUserPage);
 app.post('/updateUser/:id', urlencodedParser,route.updateUserDetails);
 app.get('/deleteUser/:id', route.deleteUser);
+app.get('/signIn', route.signIn);
+app.post('/signIn', urlencodedParser, route.signUserIn);
+app.get('/signOut/:id', route.signUserOut);
 app.ws("/makeConnection", route.makeConnection);
 
 app.use((req, res, next) => {

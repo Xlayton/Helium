@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt-nodejs');
 const fs = require('fs');
 const uNav = require("../util/u_nav");
 const lNav = require("../util/l_nav");
+const schema = require("../db/createSchema.js");
 
 var websocketList = [];
 /**
@@ -20,12 +21,14 @@ const _render = (res, fileName, title, nav, style, opts) => {
         style: style,
         ...opts
     };
+    // console.log(options);
     res.render(fileName, options);
 };
 
 const viewUsers = (req, res) => {
     schema.getAllUsers().then(users => {
-        _render(res, 'viewUsers', 'View All Users', { "userData": users });
+        // console.log(users);
+        _render(res, 'viewUsers', 'View All Users', uNav, "dark", { "userData": users });
     });
 };
 
@@ -34,23 +37,36 @@ const createUserPage = (req, res) => {
 };
 
 const createAUser = (req, res) => {
-    bcrypt.hash(req.body.password, null, null, (err, hash) => {
-        var myHash = hash;
-        let user = {
-            id: req.body.userId,
-            name: req.body.username,
-            password: myHash,
-            email: req.body.email,
-            icon: null
-        };
-        schema.addUser(user);
-        res.redirect('/seeUsers');
+    let uniqueEmail = true;
+    schema.getAllUsers().then(allUsers => {
+        allusers.forEach(existingUser => {
+            if (existingUser.email == req.body.email) {
+                uniqueEmail = false;
+            }
+        });
     });
+    if (uniqueEmail) {
+        bcrypt.hash(req.body.password, null, null, (err, hash) => {
+            var myHash = hash;
+            let user = {
+                id: req.body.userId,
+                name: req.body.username,
+                password: myHash,
+                email: req.body.email,
+                icon: null
+            };
+            schema.addUser(user);
+            res.redirect('/seeUsers');
+        });
+    } else {
+        res.redirect('/createUser');
+    }
 };
 
 const updateUserPage = (req, res) => { //taking user to user creation form
     schema.getUser(req.params.id).then(user => {
-        _render(res, 'updateUser', 'Update a User', { "account": user });
+        _render(res, 'updateUser', 'Update a User', uNav, "dark", { "account": user });
+
     });
 };
 
@@ -77,6 +93,57 @@ const deleteUser = (req, res) => { //deletes user with id parameter
         schema.removeUser(user);
         res.redirect('/seeUsers');
     });
+};
+
+const signIn = (req, res) => {
+    _render(res, 'signIn', 'Sign In', uNav, "dark");
+};
+
+const signUserIn = (req, res) => {
+    let foundUser = false;
+    schema.getAllUsers().then(allUsers => {
+        for (let thisUser of allUsers) {
+            if (thisUser.email == req.body.email) {
+                var response = bcrypt.compareSync(`${req.body.password}`, thisUser.password);
+                if (response) {
+                    req.session.user = {
+                        isAuthenicated: true,
+                        username: thisUser.username,
+                        email: thisUser.email,
+                        id: thisUser.id,
+                        icon: thisUser.icon
+                    };
+                    // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
+                    foundUser = true;
+                    res.redirect('/seeUsers');
+                }
+            }
+        }
+        if (!foundUser) {
+            res.redirect('/signIn');
+        }
+    });
+};
+
+const signUserOut = (req, res) => {
+    try {
+        if (req.params.id == req.session.user.id) {
+            req.session.destroy(err => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.redirect('/seeUsers');
+                    console.log("User signed out");
+                }
+            });
+        } else {
+            console.log("You are not the signed-in user");
+            res.redirect('/seeUsers');
+        }
+    } catch (error) {
+        console.log("No one is logged in right now");
+        res.redirect('/seeUsers');
+    }
 };
 
 const getIndex = (req, res) => {
@@ -109,6 +176,9 @@ module.exports = {
     updateUserPage: updateUserPage,
     updateUserDetails: updateUserDetails,
     deleteUser: deleteUser,
+    signIn: signIn,
+    signUserIn: signUserIn,
+    signUserOut: signUserOut,
     getIndex: getIndex,
     makeConnection: makeConnection
 };
