@@ -48,6 +48,7 @@ app.get('/signIn', route.signIn);
 app.post('/signIn', urlencodedParser, route.signUserIn);
 app.get('/signOut/:id', route.signUserOut);
 app.get('/homepage', route.homepage);
+app.get('/chat/:id', route.chat);
 app.ws("/makeConnection", route.makeConnection);
 
 app.use((req, res, next) => {

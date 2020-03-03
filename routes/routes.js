@@ -40,7 +40,7 @@ const createUserPage = (req, res) => {
 const createAUser = (req, res) => {
     let uniqueEmail = true;
     schema.getAllUsers().then(allUsers => {
-        allusers.forEach(existingUser => {
+        allUsers.forEach(existingUser => {
             if (existingUser.email == req.body.email) {
                 uniqueEmail = false;
             }
@@ -50,7 +50,6 @@ const createAUser = (req, res) => {
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let user = {
-                id: req.body.userId,
                 name: req.body.username,
                 password: myHash,
                 email: req.body.email,
@@ -167,21 +166,25 @@ const getIndex = (req, res) => {
 };
 
 const makeConnection = (ws, head) => {
-    console.log(head.session.user);
+    console.log(head.ws.protocol);
     if (head.session.user) {
         console.log("Connection made");
-        websocketList.push(ws);
+        let conn = { roomID: head.ws.protocol, ws: ws };
+        websocketList.push(conn);
         ws.on('message', function incoming(message) {
             console.log('received: %s', message);
-            websocketList.forEach(ws => {
-                ws.send(`${head.session.user.username}: ${message}`);
+            websocketList.forEach(con => {
+                if (con.roomID === conn.roomID) {
+                    con.ws.send(`${head.session.user.username}: ${message}`);
+                }
             });
-            //Removes that a user has disconnected, should display name when users are added
             ws.on('close', function close() {
-                if (websocketList.includes(ws)) {
-                    websocketList = websocketList.filter((cli) => cli !== ws);
-                    websocketList.forEach(bye => {
-                        bye.send("User Disconnected");
+                if (websocketList.includes(conn)) {
+                    websocketList = websocketList.filter((cli) => cli !== conn);
+                    websocketList.forEach(con => {
+                        if (con.roomID === conn.roomID) {
+                            con.ws.send("User Disconnected");
+                        }
                     });
                 }
             });
@@ -201,6 +204,14 @@ const homepage = (req, res) => {
     }
 };
 
+const chat = (req, res) => {
+    if (req.session.user) {
+        _render(res, "chat", "Chat", lNav, req.session.user.theme, { serverID: req.params.id });
+    } else {
+        res.redirect("/signin");
+    }
+};
+
 module.exports = {
     viewUsers: viewUsers,
     createUserPage: createUserPage,
@@ -214,4 +225,6 @@ module.exports = {
     getIndex: getIndex,
     makeConnection: makeConnection,
     homepage: homepage,
+    chat: chat,
+
 };

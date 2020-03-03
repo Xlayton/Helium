@@ -8,4 +8,5 @@ block main-content
             div(class="input-section")
                 input(id="input" class="msg-input" type="text" placeholder="Send Message...")
                 button(id="send" class="msg-button") Send
-    script(src="js/connection.js")
+    script var serverID = #{serverID}
+    script(src="/js/connection.js")
