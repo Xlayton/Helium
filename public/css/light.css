@@ -212,3 +212,13 @@ body {
     border: .5px solid #000;
     background-color: #dcdcdc;
 }
+.servers::-webkit-scrollbar-thumb {
+    background: #676767;
+    border: 2px solid #3d3d3d;
+}
+.server {
+    background-color: #e8e8e8;
+}
+#makeServerBack {
+    background-color: rgba(220,220,220, 0.8)
+}

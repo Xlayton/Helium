@@ -2,9 +2,26 @@ extends layout
 block main-content
     section(class="homepage")
         div(class="sidebar")
+            div(class="servers")
+                div(class="server" id="addServer")
+                    img(class="server-icon" src=(style == "dark" ? "../img/white.png" : "../img/black.png"))
         div(class="mainarea")
             div(class="content")
-                h1(class="page-title") Welcome back #{username}
+                h1(class="page-title") Welcome back 
+                    span(class="username") #{username}
                 div(class="online-friends")
                     h2(class="friends-title") Online Friends
                     div(class="friends-container")
+        div(id="makeServerBack")
+        div(id="makeServer")
+            form(class="form" method="post" action="/makeServer")
+                section(class="form-elements")
+                    p(class="form-title") Make a Server
+                    input(type="text" placeholder="Server Name")
+                    section(class="radio-container")
+                        label(for="Public") Public
+                        input(type="radio" name="visibility" value="0")
+                        label(for="Private") Private
+                        input(type="radio" name="visibility" value="1")
+                    input(type="submit" id="btn" value="Make Server")
+    script(src="./js/makeRoom.js")

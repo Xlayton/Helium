@@ -2,11 +2,27 @@ extends layout
 block main-content
     section(class="chatpage")
         div(class="sidebar")
+            div(class="servers")
+                    div(class="server" id="addServer")
+                        img(class="server-icon" src=(style == "dark" ? "../img/white.png" : "../img/black.png"))
         div(class="channel-area")
         div(class="chat-area")
             div(id="display" class="msg-section")
             div(class="input-section")
                 input(id="input" class="msg-input" type="text" placeholder="Send Message...")
                 button(id="send" class="msg-button") Send
+        div(id="makeServerBack")
+        div(id="makeServer")
+            form(class="form" method="post" action="/makeServer")
+                section(class="form-elements")
+                    p(class="form-title") Make a Server
+                    input(type="text" placeholder="Server Name")
+                    section(class="radio-container")
+                        label(for="Public") Public
+                        input(type="radio" name="visibility" value="0")
+                        label(for="Private") Private
+                        input(type="radio" name="visibility" value="1")
+                    input(type="submit" id="btn" value="Make Server")
+    script(src="/js/makeRoom.js")
     script var serverID = #{serverID}
     script(src="/js/connection.js")

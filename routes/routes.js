@@ -166,7 +166,6 @@ const getIndex = (req, res) => {
 };
 
 const makeConnection = (ws, head) => {
-    console.log(head.ws.protocol);
     if (head.session.user) {
         console.log("Connection made");
         let conn = { roomID: head.ws.protocol, ws: ws };
