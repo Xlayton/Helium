@@ -84,7 +84,7 @@ body::-webkit-scrollbar {
     font-style: italic;
     font-size: 4vh;
     margin: 0;
-    text-align:center;
+    text-align: center;
 }
 
 .form-elements {
@@ -245,26 +245,28 @@ body::-webkit-scrollbar {
 }
 
 .servers {
-    display:flex;
+    display: flex;
     flex-flow: column;
     height: 100%;
-    width:100%;
-    align-items:center;
-    overflow-y:scroll;
+    width: 100%;
+    align-items: center;
+    overflow-y: scroll;
 }
+
 .servers::-webkit-scrollbar {
     width: 10px;
     margin-right: 1px;
 }
+
 .servers::-webkit-scrollbar-thumb {
     border-radius: 50px;
 }
 
 .server {
-    width:75%;
+    width: 75%;
     border-radius: 50%;
-    overflow:hidden;
-    display:flex;
+    overflow: hidden;
+    display: flex;
 }
 
 #addServer {
@@ -272,38 +274,38 @@ body::-webkit-scrollbar {
 }
 
 .server:hover {
-    border-radius:25%;
+    border-radius: 25%;
 }
 
 .server-icon {
     position: relative;
-    width: 150%;
+    width: 100%;
     padding: 0;
-    margin:0;
+    margin: 0;
 }
 
 #makeServer {
-    position:absolute;
-    margin:auto;
-    top:0;
-    left:0;
-    bottom:0;
-    right:0;
-    display:none;
-    width:50%;
-    height:50%;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: none;
+    width: 50%;
+    height: 50%;
 }
 
 #makeServer .form .form-elements {
     width: 100%;
-    height:100%;
+    height: 100%;
 }
 
 #makeServerBack {
     position: absolute;
-    width:100%;
-    height:100%;
-    top:0;
-    left:0;
-    display:none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: none;
 }
