@@ -117,9 +117,10 @@ const signUserIn = (req, res) => {
             if (thisUser.email == req.body.email) {
                 var response = bcrypt.compareSync(`${req.body.password}`, thisUser.password);
                 if (response) {
+                    console.log(thisUser);
                     req.session.user = {
                         isAuthenicated: true,
-                        username: thisUser.username,
+                        username: thisUser.name,
                         email: thisUser.email,
                         id: thisUser.id,
                         icon: thisUser.icon
@@ -162,23 +163,28 @@ const getIndex = (req, res) => {
 };
 
 const makeConnection = (ws, head) => {
-    console.log("Connection made");
-    websocketList.push(ws);
-    ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
-        websocketList.forEach(ws => {
-            ws.send(message);
+    console.log(head.session.user);
+    if (head.session.user) {
+        console.log("Connection made");
+        websocketList.push(ws);
+        ws.on('message', function incoming(message) {
+            console.log('received: %s', message);
+            websocketList.forEach(ws => {
+                ws.send(`${head.session.user.username}: ${message}`);
+            });
+            //Removes that a user has disconnected, should display name when users are added
+            ws.on('close', function close() {
+                if (websocketList.includes(ws)) {
+                    websocketList = websocketList.filter((cli) => cli !== ws);
+                    websocketList.forEach(bye => {
+                        bye.send("User Disconnected");
+                    });
+                }
+            });
         });
-        //Removes that a user has disconnected, should display name when users are added
-        ws.on('close', function close() {
-            if (websocketList.includes(ws)) {
-                websocketList = websocketList.filter((cli) => cli !== ws);
-                websocketList.forEach(bye => {
-                    bye.send("User Disconnected");
-                });
-            }
-        });
-    });
+    } else {
+        ws.send("Please log in to use the chat feature.");
+    }
 };
 module.exports = {
     viewUsers: viewUsers,
