@@ -50,7 +50,6 @@ const createAUser = (req, res) => {
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let user = {
-                id: req.body.userId,
                 name: req.body.username,
                 password: myHash,
                 email: req.body.email,
@@ -86,7 +85,6 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let updatedUser = {
-                id: req.body.userId,
                 name: req.body.username,
                 password: myHash,
                 email: req.body.email,
@@ -117,7 +115,6 @@ const signUserIn = (req, res) => {
             if (thisUser.email == req.body.email) {
                 var response = bcrypt.compareSync(`${req.body.password}`, thisUser.password);
                 if (response) {
-                    console.log(thisUser);
                     req.session.user = {
                         isAuthenicated: true,
                         username: thisUser.name,
