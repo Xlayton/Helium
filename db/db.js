@@ -19,7 +19,7 @@ exports.getAllUsers = async () => {
 
 exports.addUser = user => {
     pool
-    .query(`insert into users(id,name,email,icon,password) values(${user.id},'${user.name}','${user.email}','${user.icon}','${user.password}')`)
+    .query(`insert into users(name,email,icon,password) values('${user.name}','${user.email}','${user.icon}','${user.password}')`)
     .catch(err => console.error(err));
 };
 
@@ -46,13 +46,13 @@ exports.createAllTables = password => {
     if(password !== process.env.PASSWORD) {
         return;
     } else {
-        pool.query('create table channels(id bigint NOT NULL PRIMARY KEY,name text NOT NULL,messages bigint[],users bigint[],roles bigint[],permissions text)').catch(err => console.log(err))
-        pool.query('create table chatrooms(id bigint NOT NULL PRIMARY KEY,name text NOT NULL,icon text,visibility boolean NOT NULL,channels bigint[],users bigint[],roles bigint[],emojis bigint[])').catch(err => console.log(err))
-        pool.query('create table emojis(id bigint NOT NULL PRIMARY KEY,img text NOT NULL,name text NOT NULL)').catch(err => console.log(err))
-        pool.query('create table messages(id bigint NOT NULL PRIMARY KEY,msg text NOT NULL,usr bigint NOT NULL,reactions bigint[])').catch(err => console.log(err))
-        pool.query('create table reactions(id bigint NOT NULL PRIMARY KEY,emoji bigint NOT NULL,usr bigint NOT NULL)').catch(err => console.log(err))
-        pool.query('create table roles(id bigint NOT NULL PRIMARY KEY,name text NOT NULL,color text,permission bigint NOT NULL)').catch(err => console.log(err))
-        pool.query('create table users(id bigint NOT NULL PRIMARY KEY,name text NOT NULL,email text NOT NULL,icon text,password text NOT NULL)').catch(err => console.log(err))
+        pool.query('create table channels(id serial PRIMARY KEY,name text NOT NULL,messages bigint[],users bigint[],roles bigint[],permissions text)').catch(err => console.log(err))
+        pool.query('create table chatrooms(id serial PRIMARY KEY,name text NOT NULL,icon text,visibility boolean NOT NULL,channels bigint[],users bigint[],roles bigint[],emojis bigint[])').catch(err => console.log(err))
+        pool.query('create table emojis(id serial PRIMARY KEY,img text NOT NULL,name text NOT NULL)').catch(err => console.log(err))
+        pool.query('create table messages(id serial PRIMARY KEY,msg text NOT NULL,usr bigint NOT NULL,reactions bigint[])').catch(err => console.log(err))
+        pool.query('create table reactions(id serial PRIMARY KEY,emoji bigint NOT NULL,usr bigint NOT NULL)').catch(err => console.log(err))
+        pool.query('create table roles(id serial PRIMARY KEY,name text NOT NULL,color text,permission bigint NOT NULL)').catch(err => console.log(err))
+        pool.query('create table users(id serial PRIMARY KEY,name text NOT NULL,email text NOT NULL,icon text,password text NOT NULL)').catch(err => console.log(err))
     }
 }
 
