@@ -1,0 +1,17 @@
+html
+    body
+        div(class="content")
+            form(id='update' method='POST' action="/updateUser/"+account.id onsubmit="return checkUpdate()" class='form')
+                //- p Id:&nbsp;
+                //-     input(type='text' id='IdUpdate' name="userId" value=account.id)
+                p Username:&nbsp;
+                    input(type='text' id='usernameUpdate' name="username" value=account.name)
+                p Password:&nbsp;
+                    input(type='text' id='passwordUpdate' name="password")
+                p E-mail:&nbsp;
+                    input(type='text' id='emailUpdate' name="email" value=account.email)
+                p Icon:&nbsp;
+                    input(type='file' id='iconUpdate' name='icon' value=account.icon accept="image/*") 
+                p
+                    input(type='submit' class='btn' value='Update Account')    
+        script(src="/backend.js")

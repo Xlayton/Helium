@@ -1,0 +1,11 @@
+html
+    body
+        each user in userData
+            p Id: #{user.id} | Name: #{user.name} | Password: #{user.password} | Email: #{user.email} | Icon: #{user.icon}
+            a(href='/updateUser/'+user.id class='btn') Update This User &nbsp;
+            a(href='/deleteUser/'+user.id class='btn') Delete This User &nbsp;
+            a(href='/signOut/'+user.id class='btn') Sign Out
+        br
+        a(href='/createUser' class='btn') Create User
+        br
+        a(href='/signIn' class='btn') Log In

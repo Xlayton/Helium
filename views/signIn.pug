@@ -1,0 +1,11 @@
+html
+    body
+        div(class="content")
+                form(id='userCreation' method='POST' action="/signIn" onsubmit="return checkLogin()" class='form')
+                    p Email:&nbsp;
+                        input(type='text' id='emailLogin' name="email")
+                    p Password:&nbsp;
+                        input(type='text' id='passwordLogin' name="password")
+                    p
+                        input(type='submit' class='btn' value='Sign In')    
+        script(src="/backend.js")
