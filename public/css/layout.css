@@ -184,11 +184,6 @@ body::-webkit-scrollbar {
     width: 100%;
 }
 
-.content {
-    border-radius: 15px;
-    margin: 0 2vmin;
-}
-
 .page-title {
     font-size: 5vmin;
     grid-area: title;

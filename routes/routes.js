@@ -74,14 +74,14 @@ const updateUserPage = (req, res) => { //taking user to user creation form
 const updateUserDetails = (req, res) => { //after user fills out user creation form
     schema.getUser(req.params.id).then(user => {
 
-    // https://stackoverflow.com/questions/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
-    if(!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
-    const tempPath = req.file.path; /* name of the input field */
-    const targetPath = path.join(__dirname, 'temp/avatar.png'); // new path for temp file
-    fs.renameSync(tempPath, targetPath) // "moves" the file
-    let file = fs.readFileSync(targetPath); // reads the new file
-    let b64String = file.toString('base64'); // gets the base64 string representation 
-    fs.unlink(targetPath, err => console.log(err)); // deletes the new file
+        // https://stackoverflow.com/questions/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
+        if (!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
+        const tempPath = req.file.path; /* name of the input field */
+        const targetPath = path.join(__dirname, 'temp/avatar.png'); // new path for temp file
+        fs.renameSync(tempPath, targetPath); // "moves" the file
+        let file = fs.readFileSync(targetPath); // reads the new file
+        let b64String = file.toString('base64'); // gets the base64 string representation 
+        fs.unlink(targetPath, err => console.log(err)); // deletes the new file
 
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
@@ -111,30 +111,34 @@ const signIn = (req, res) => {
 };
 
 const signUserIn = (req, res) => {
-    let foundUser = false;
-    schema.getAllUsers().then(allUsers => {
-        for (let thisUser of allUsers) {
-            if (thisUser.email == req.body.email) {
-                var response = bcrypt.compareSync(`${req.body.password}`, thisUser.password);
-                if (response) {
-                    console.log(thisUser);
-                    req.session.user = {
-                        isAuthenicated: true,
-                        username: thisUser.name,
-                        email: thisUser.email,
-                        id: thisUser.id,
-                        icon: thisUser.icon
-                    };
-                    // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
-                    foundUser = true;
-                    res.redirect('/seeUsers');
+    if (!req.session.user) {
+        let foundUser = false;
+        schema.getAllUsers().then(allUsers => {
+            for (let thisUser of allUsers) {
+                if (thisUser.email == req.body.email) {
+                    var response = bcrypt.compareSync(`${req.body.password}`, thisUser.password);
+                    if (response) {
+                        req.session.user = {
+                            isAuthenicated: true,
+                            username: thisUser.name,
+                            email: thisUser.email,
+                            id: thisUser.id,
+                            icon: thisUser.icon,
+                            theme: "dark"
+                        };
+                        // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
+                        foundUser = true;
+                        res.redirect('/homepage');
+                    }
                 }
             }
-        }
-        if (!foundUser) {
-            res.redirect('/signIn');
-        }
-    });
+            if (!foundUser) {
+                res.redirect('/signIn');
+            }
+        });
+    } else {
+        res.redirect("homepage");
+    }
 };
 
 const signUserOut = (req, res) => {
@@ -186,6 +190,17 @@ const makeConnection = (ws, head) => {
         ws.send("Please log in to use the chat feature.");
     }
 };
+
+const homepage = (req, res) => {
+    if (req.session.user) {
+        _render(res, "homepage", "Homepage", lNav, req.session.user.theme, {
+            username: req.session.user.username
+        });
+    } else {
+        res.redirect("/signin");
+    }
+};
+
 module.exports = {
     viewUsers: viewUsers,
     createUserPage: createUserPage,
@@ -197,5 +212,6 @@ module.exports = {
     signUserIn: signUserIn,
     signUserOut: signUserOut,
     getIndex: getIndex,
-    makeConnection: makeConnection
+    makeConnection: makeConnection,
+    homepage: homepage,
 };
