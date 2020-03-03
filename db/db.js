@@ -52,7 +52,7 @@ exports.createAllTables = password => {
         pool.query('create table messages(id serial PRIMARY KEY,msg text NOT NULL,usr bigint NOT NULL,reactions bigint[])').catch(err => console.log(err))
         pool.query('create table reactions(id serial PRIMARY KEY,emoji bigint NOT NULL,usr bigint NOT NULL)').catch(err => console.log(err))
         pool.query('create table roles(id serial PRIMARY KEY,name text NOT NULL,color text,permission bigint NOT NULL)').catch(err => console.log(err))
-        pool.query('create table users(id serial PRIMARY KEY,name text NOT NULL,email text NOT NULL,icon text,password text NOT NULL, friends bigint[],theme text)').catch(err => console.log(err))
+        pool.query('create table users(id serial PRIMARY KEY,name text NOT NULL,email text NOT NULL,icon text,password text NOT NULL,friends bigint[],theme text)').catch(err => console.log(err))
     }
 }
 
