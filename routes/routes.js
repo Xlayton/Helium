@@ -4,6 +4,7 @@ const fs = require('fs');
 const uNav = require("../util/u_nav");
 const lNav = require("../util/l_nav");
 const schema = require("../db/db.js");
+const path = require('path');
 
 var websocketList = [];
 /**
@@ -76,7 +77,7 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
 
     // https://stackoverflow.com/questions/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
     if(!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
-    const tempPath = req.icon /* name of the input field */.path;
+    const tempPath = req.file.path; /* name of the input field */
     const targetPath = path.join(__dirname, 'temp/avatar.png'); // new path for temp file
     fs.renameSync(tempPath, targetPath) // "moves" the file
     let file = fs.readFileSync(targetPath); // reads the new file
