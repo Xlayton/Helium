@@ -1,7 +1,7 @@
 html
     body
         div(class="content")
-            form(id='update' method='POST' action="/updateUser/"+account.id onsubmit="return checkUpdate()" class='form')
+            form(id='update' method='POST' enctype='multipart/form-data' action="/updateUser/"+account.id onsubmit="return checkUpdate()" class='form')
                 //- p Id:&nbsp;
                 //-     input(type='text' id='IdUpdate' name="userId" value=account.id)
                 p Username:&nbsp;

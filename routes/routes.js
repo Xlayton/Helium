@@ -4,6 +4,7 @@ const fs = require('fs');
 const uNav = require("../util/u_nav");
 const lNav = require("../util/l_nav");
 const schema = require("../db/db.js");
+const path = require('path');
 
 var websocketList = [];
 /**
@@ -75,7 +76,7 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
 
     // https://stackoverflow.com/questions/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
     if(!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
-    const tempPath = req.icon /* name of the input field */.path;
+    const tempPath = req.file.path; /* name of the input field */
     const targetPath = path.join(__dirname, 'temp/avatar.png'); // new path for temp file
     fs.renameSync(tempPath, targetPath) // "moves" the file
     let file = fs.readFileSync(targetPath); // reads the new file
@@ -116,9 +117,10 @@ const signUserIn = (req, res) => {
             if (thisUser.email == req.body.email) {
                 var response = bcrypt.compareSync(`${req.body.password}`, thisUser.password);
                 if (response) {
+                    console.log(thisUser);
                     req.session.user = {
                         isAuthenicated: true,
-                        username: thisUser.username,
+                        username: thisUser.name,
                         email: thisUser.email,
                         id: thisUser.id,
                         icon: thisUser.icon
@@ -161,23 +163,28 @@ const getIndex = (req, res) => {
 };
 
 const makeConnection = (ws, head) => {
-    console.log("Connection made");
-    websocketList.push(ws);
-    ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
-        websocketList.forEach(ws => {
-            ws.send(message);
+    console.log(head.session.user);
+    if (head.session.user) {
+        console.log("Connection made");
+        websocketList.push(ws);
+        ws.on('message', function incoming(message) {
+            console.log('received: %s', message);
+            websocketList.forEach(ws => {
+                ws.send(`${head.session.user.username}: ${message}`);
+            });
+            //Removes that a user has disconnected, should display name when users are added
+            ws.on('close', function close() {
+                if (websocketList.includes(ws)) {
+                    websocketList = websocketList.filter((cli) => cli !== ws);
+                    websocketList.forEach(bye => {
+                        bye.send("User Disconnected");
+                    });
+                }
+            });
         });
-        //Removes that a user has disconnected, should display name when users are added
-        ws.on('close', function close() {
-            if (websocketList.includes(ws)) {
-                websocketList = websocketList.filter((cli) => cli !== ws);
-                websocketList.forEach(bye => {
-                    bye.send("User Disconnected");
-                });
-            }
-        });
-    });
+    } else {
+        ws.send("Please log in to use the chat feature.");
+    }
 };
 module.exports = {
     viewUsers: viewUsers,
