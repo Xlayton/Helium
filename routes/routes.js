@@ -29,24 +29,24 @@ const _render = (res, fileName, title, nav, style, opts) => {
 const viewUsers = (req, res) => {
     schema.getAllUsers().then(users => {
         // console.log(users);
-        _render(res, 'viewUsers', 'View All Users', uNav, { "userData": users });
+        _render(res, 'viewUsers', 'View All Users', uNav, "dark", { "userData": users });
     });
 };
 
 const createUserPage = (req, res) => {
-    _render(res, 'createUser', "Create a User", uNav);
+    _render(res, 'createUser', "Create a User", uNav, "dark");
 };
 
 const createAUser = (req, res) => {
     let uniqueEmail = true;
     schema.getAllUsers().then(allUsers => {
         allusers.forEach(existingUser => {
-            if(existingUser.email == req.body.email){
+            if (existingUser.email == req.body.email) {
                 uniqueEmail = false;
             }
         });
     });
-    if(uniqueEmail){
+    if (uniqueEmail) {
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let user = {
@@ -58,16 +58,15 @@ const createAUser = (req, res) => {
             };
             schema.addUser(user);
             res.redirect('/seeUsers');
-        })
-    }
-    else{
+        });
+    } else {
         res.redirect('/createUser');
     }
-}
+};
 
 const updateUserPage = (req, res) => { //taking user to user creation form
     schema.getUser(req.params.id).then(user => {
-        _render(res, 'updateUser', 'Update a User', uNav, {"account": user});
+        _render(res, 'updateUser', 'Update a User', uNav, "dark", { "account": user });
 
     });
 };
@@ -105,19 +104,19 @@ const deleteUser = (req, res) => { //deletes user with id parameter
         schema.removeUser(user);
         res.redirect('/seeUsers');
     });
-}
+};
 
-const signIn = (req,res) => {
-    _render(res, 'signIn', 'Sign In', uNav);
-}
+const signIn = (req, res) => {
+    _render(res, 'signIn', 'Sign In', uNav, "dark");
+};
 
 const signUserIn = (req, res) => {
     let foundUser = false;
     schema.getAllUsers().then(allUsers => {
-        for(let thisUser of allUsers){
-            if(thisUser.email == req.body.email){
+        for (let thisUser of allUsers) {
+            if (thisUser.email == req.body.email) {
                 var response = bcrypt.compareSync(`${req.body.password}`, thisUser.password);
-                if(response){
+                if (response) {
                     req.session.user = {
                         isAuthenicated: true,
                         username: thisUser.username,
@@ -131,26 +130,24 @@ const signUserIn = (req, res) => {
                 }
             }
         }
-        if(!foundUser){
+        if (!foundUser) {
             res.redirect('/signIn');
         }
     });
-}
+};
 
 const signUserOut = (req, res) => {
-    try {   
-        if(req.params.id == req.session.user.id){
+    try {
+        if (req.params.id == req.session.user.id) {
             req.session.destroy(err => {
-                if(err){
-                    console.log(err)
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.redirect('/seeUsers');
+                    console.log("User signed out");
                 }
-                else{
-                    res.redirect('/seeUsers')
-                    console.log("User signed out")
-                }
-            })
-        }
-        else{
+            });
+        } else {
             console.log("You are not the signed-in user");
             res.redirect('/seeUsers');
         }
@@ -158,7 +155,7 @@ const signUserOut = (req, res) => {
         console.log("No one is logged in right now");
         res.redirect('/seeUsers');
     }
-}
+};
 
 const getIndex = (req, res) => {
     _render(res, "landingPage", "Helium", uNav, "dark");

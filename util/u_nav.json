@@ -1,5 +1,5 @@
 {
     "Home": "/",
     "Public Servers": "/servers",
-    "Log In": "/createuser"
+    "Log In": "/signIn"
 }
