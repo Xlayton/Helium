@@ -117,7 +117,6 @@ const signUserIn = (req, res) => {
             if (thisUser.email == req.body.email) {
                 var response = bcrypt.compareSync(`${req.body.password}`, thisUser.password);
                 if (response) {
-                    console.log(thisUser);
                     req.session.user = {
                         isAuthenicated: true,
                         username: thisUser.name,
