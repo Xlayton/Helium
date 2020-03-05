@@ -213,7 +213,14 @@ const chat = (req, res) => {
 
 const makeRoom = (req, res) => {
     if (req.session.user) {
-        schema.addChatRoom({ name: req.body.name, icon: "test4now", visibility: (req.body.visibility === "0" ? true : false), creatorID: req.session.user.id });
+        if (!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
+        const tempPath = req.file.path; /* name of the input field */
+        const targetPath = path.join(__dirname, 'temp/avatar.png'); // new path for temp file
+        fs.renameSync(tempPath, targetPath); // "moves" the file
+        let file = fs.readFileSync(targetPath); // reads the new file
+        let b64String = file.toString('base64'); // gets the base64 string representation 
+        fs.unlink(targetPath, err => console.log(err)); // deletes the new file
+        schema.addChatRoom({ name: req.body.name, icon: b64String, visibility: (req.body.visibility === "0" ? true : false), creatorID: req.session.user.id });
         res.redirect("/homepage");
     } else {
         res.redirect("/signin");

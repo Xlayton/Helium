@@ -43,8 +43,7 @@ exports.getUser = async id => {
 };
 
 exports.addChatRoom = chatRoom => {
-    let q = `insert into chatrooms(name,icon,visibility,users) values('${chatRoom.name}', '${chatRoom.icon}', ${chatRoom.visibility},ARRAY[${chatRoom.creatorID}])`;
-    console.log(q);
+    let q = `insert into chatrooms(name,icon,visibility,users, invitecode) values('${chatRoom.name}', '${chatRoom.icon}', ${chatRoom.visibility},ARRAY[${chatRoom.creatorID}])`;
     pool
         .query(q)
         .catch(err => console.error(err));
