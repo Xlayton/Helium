@@ -49,6 +49,7 @@ app.post('/signIn', urlencodedParser, route.signUserIn);
 app.get('/signOut/:id', route.signUserOut);
 app.get('/homepage', route.homepage);
 app.get('/chat/:id', route.chat);
+app.post('/makeServer', urlencodedParser, upload.single("icon"), route.makeRoom);
 app.ws("/makeConnection", route.makeConnection);
 
 app.use((req, res, next) => {

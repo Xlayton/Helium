@@ -211,6 +211,15 @@ const chat = (req, res) => {
     }
 };
 
+const makeRoom = (req, res) => {
+    if (req.session.user) {
+        schema.addChatRoom({ name: req.body.name, icon: "test4now", visibility: (req.body.visibility === "0" ? true : false), creatorID: req.session.user.id });
+        res.redirect("/homepage");
+    } else {
+        res.redirect("/signin");
+    }
+};
+
 module.exports = {
     viewUsers: viewUsers,
     createUserPage: createUserPage,
@@ -225,5 +234,5 @@ module.exports = {
     makeConnection: makeConnection,
     homepage: homepage,
     chat: chat,
-
+    makeRoom: makeRoom,
 };

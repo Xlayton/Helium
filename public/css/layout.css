@@ -301,6 +301,10 @@ body::-webkit-scrollbar {
     height: 100%;
 }
 
+#makeServer .form .form-elements * {
+    margin-top: 2vh;
+}
+
 #makeServerBack {
     position: absolute;
     width: 100%;
