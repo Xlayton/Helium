@@ -35,9 +35,16 @@ exports.updateUser = (user, newUser) => {
     .catch(err => console.error(err));
 };
 
-exports.getUser = async id => {
+exports.getUserById = async id => {
     return pool
     .query(`select * from users where id=${id}`)
+    .then(res => res.rows[0])
+    .catch(err => console.error(err));
+};
+
+exports.getUserByEmail = async email => {
+    return pool
+    .query(`select * from users where email=${email}`)
     .then(res => res.rows[0])
     .catch(err => console.error(err));
 };

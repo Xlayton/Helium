@@ -51,6 +51,11 @@ app.post('/signIn', urlencodedParser, route.signUserIn);
 app.get('/signOut/:id', route.signUserOut);
 app.ws("/makeConnection", route.makeConnection);
 
+app.get('/friendRequests', route.friendRequests);
+app.post('/sendFriendRequest', urlencodedParser, route.sendFriendRequest);
+app.post('/acceptRequest/:id', route.acceptRequest);
+app.post('/rejectRequest/:id', route.rejectRequest);
+
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");

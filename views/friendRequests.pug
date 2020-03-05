@@ -1,0 +1,17 @@
+extends layout
+block main-content
+    form(id="sendFriendRequest" method="POST" action='/sendFriendRequest' onsubmit='return checkForUsers()' class='form')
+        p User's Email:&nbsp;
+            input(type="email" id="emailRequest" name="email")
+        span
+            input(type='submit' id='btn' value='Send Friend Request')
+    br
+    h2 Friend Requests
+    each user in requests
+        p #{user.username} - #{user.email}
+            form(id="acceptRequest" method="POST" action='/acceptRequest/'+user.id)
+                p
+                    input(type='submit' id='btn' value='Accept')
+            form(id="rejectRequest" method="POST" action='/rejectRequest/'+user.id)
+                p
+                    input(type='submit' id='btn' value='Reject')

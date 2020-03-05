@@ -40,7 +40,7 @@ const createUserPage = (req, res) => {
 const createAUser = (req, res) => {
     let uniqueEmail = true;
     schema.getAllUsers().then(allUsers => {
-        allusers.forEach(existingUser => {
+        allUsers.forEach(existingUser => {
             if (existingUser.email == req.body.email) {
                 uniqueEmail = false;
             }
@@ -54,7 +54,9 @@ const createAUser = (req, res) => {
                 name: req.body.username,
                 password: myHash,
                 email: req.body.email,
-                icon: null
+                icon: null,
+                friendReqs: [],
+                friendList: []
             };
             schema.addUser(user);
             res.redirect('/seeUsers');
@@ -65,14 +67,14 @@ const createAUser = (req, res) => {
 };
 
 const updateUserPage = (req, res) => { //taking user to user creation form
-    schema.getUser(req.params.id).then(user => {
+    schema.getUserById(req.params.id).then(user => {
         _render(res, 'updateUser', 'Update a User', uNav, "dark", { "account": user });
 
     });
 };
 
 const updateUserDetails = (req, res) => { //after user fills out user creation form
-    schema.getUser(req.params.id).then(user => {
+    schema.getUserById(req.params.id).then(user => {
 
     // https://stackoverflow.com/questions/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
     if(!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
@@ -100,7 +102,7 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
 
 const deleteUser = (req, res) => { //deletes user with id parameter
     //end user session
-    schema.getUser(req.params.id).then(user => {
+    schema.getUserById(req.params.id).then(user => {
         schema.removeUser(user);
         res.redirect('/seeUsers');
     });
@@ -125,7 +127,6 @@ const signUserIn = (req, res) => {
                         id: thisUser.id,
                         icon: thisUser.icon
                     };
-                    // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
                     foundUser = true;
                     res.redirect('/seeUsers');
                 }
@@ -186,6 +187,53 @@ const makeConnection = (ws, head) => {
         ws.send("Please log in to use the chat feature.");
     }
 };
+
+const friendRequests = (req,res) => {
+    schema.getUserById(req.session.user.id).then(thisUser => {
+        _render(res, "friendRequests", "Friend Requests", uNav, "dark", {"requests": thisUser.friendReqs, "loggedInUser": thisUser});
+    });
+}
+
+const sendFriendRequest = (req, res) => {
+    schema.getUserByEmail(req.body.email).then(searchedUser => {
+        schema.getUserById(req.session.user.id).then(currentUser => {
+            searchedUser.friendReqs.push(currentUser);
+            res.redirect('/friendRequests');
+        })
+    });
+}
+
+const acceptRequest = (req, res) => {
+    schema.getUserById(req.params.id).then(searchedUser => {
+        schema.getUserById(req.session.user.id).then(currentUser => {
+            let index = 0;
+            searchedUser.friendReqs.forEach(user => {
+                if(user.id == searchedUser.id){
+                    index = searchedUser.friendReqs.indexOf(user);
+                }
+            });
+            searchedUser.friendReqs.splice(index, 1);
+            searchedUser.friendList.push(currentUser);
+            res.redirect('/friendRequests');
+        });
+    })
+}
+
+const rejectRequest = (req, res) => {
+    schema.getUserById(req.params.id).then(searchedUser => {
+        schema.getUserById(req.session.user.id).then(currentUser => {
+            let index = 0;
+            searchedUser.friendReqs.forEach(user => {
+                if(user.id == searchedUser.id){
+                    index = searchedUser.friendReqs.indexOf(user);
+                }
+            });
+            searchedUser.friendReqs.splice(index, 1);
+            res.redirect('/friendRequests');
+        });
+    })
+}
+
 module.exports = {
     viewUsers: viewUsers,
     createUserPage: createUserPage,
@@ -197,5 +245,9 @@ module.exports = {
     signUserIn: signUserIn,
     signUserOut: signUserOut,
     getIndex: getIndex,
-    makeConnection: makeConnection
+    makeConnection: makeConnection,
+    friendRequests: friendRequests,
+    sendFriendRequest: sendFriendRequest,
+    acceptRequest: acceptRequest,
+    rejectRequest: rejectRequest
 };
