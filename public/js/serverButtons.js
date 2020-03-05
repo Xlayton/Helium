@@ -5,3 +5,10 @@ for (let btn of document.getElementsByClassName("server")) {
         });
     }
 }
+var inviteLink = "http://" + location.host + "/join/" + document.getElementById("copy-invite-code").name
+document.getElementById("invitelink").value = inviteLink;
+
+document.getElementById("copy-invite-code").addEventListener('click', function(e) {
+    document.getElementById("invitelink").select();
+    document.execCommand("copy");
+});

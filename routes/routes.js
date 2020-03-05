@@ -247,7 +247,10 @@ const chat = (req, res) => {
                     roomIds.push(server.id);
                 }
                 if (roomIds.includes(parseInt(req.params.id))) {
-                    _render(res, "chat", "Chat", lNav, req.session.user.theme, { serverID: req.params.id, servers: servers });
+                    schema.getChatRoomInviteCodeById(req.params.id)
+                    .then(server => {
+                        _render(res, "chat", "Chat", lNav, req.session.user.theme, { serverID: req.params.id, servers: servers, invitecode: server.invitecode });
+                    })
                 } else {
                     res.redirect("/homepage");
                 }

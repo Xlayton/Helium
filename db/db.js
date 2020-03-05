@@ -64,6 +64,13 @@ exports.getChatRoomByInviteCode = async inviteCode => {
     .catch(err => console.error(err));
 };
 
+exports.getChatRoomInviteCodeById = async roomID => {
+    return pool
+    .query(`select invitecode from chatrooms where id = cast(${roomID} as bigint)`)
+    .then(res => res.rows[0])
+    .catch(err => console.error(err));
+};
+
 exports.addUserToChatRoom = (roomID, userID) => {
     pool
     .query(`update chatrooms set users = users || cast(${userID} as bigint) where id=${roomID}`)

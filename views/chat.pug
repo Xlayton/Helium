@@ -9,6 +9,8 @@ block main-content
                     div(class="server" name=server.id)
                         img(src=server.icon name=server.id class="server-icon")
         div(class="channel-area")
+            button(id="copy-invite-code" name=invitecode) Copy Invite Code
+            textarea(style="position:absolute; left:-9999px;" id="invitelink" readonly)
         div(class="chat-area")
             div(id="display" class="msg-section")
             div(class="input-section")
