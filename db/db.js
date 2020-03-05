@@ -43,9 +43,22 @@ exports.getUser = async id => {
 };
 
 exports.addChatRoom = chatRoom => {
-    let q = `insert into chatrooms(name,icon,visibility,users, invitecode) values('${chatRoom.name}', '${chatRoom.icon}', ${chatRoom.visibility},ARRAY[${chatRoom.creatorID}])`;
+        let q = `insert into chatrooms(name,icon,visibility,users,invitecode) values('${chatRoom.name}', '${chatRoom.icon}', ${chatRoom.visibility},ARRAY[${chatRoom.creatorID}],'${parseInt(`${Math.round(new Date().getTime()/1000)}`, 16)}') returning id`;
     pool
         .query(q)
+        .then(res => {
+            pool
+                .query(`update users set chatrooms = chatrooms || cast(${res.rows[0].id} as bigint) where id=${chatRoom.creatorID}`)
+                .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+
+};
+
+exports.getUsersChatRooms = async userID => {
+    return pool
+        .query(`select icon,id from chatrooms where ${userID} = any(users)`)
+        .then(res => res.rows)
         .catch(err => console.error(err));
 };
 
@@ -54,7 +67,7 @@ exports.createAllTables = password => {
         return;
     } else {
         pool.query('create table channels(id serial PRIMARY KEY,name text NOT NULL,messages bigint[],users bigint[],roles bigint[],permissions text, invitecode text)').catch(err => console.log(err))
-        pool.query('create table chatrooms(id serial PRIMARY KEY,name text NOT NULL,icon text,visibility boolean NOT NULL,channels bigint[],users bigint[],roles bigint[],emojis bigint[])').catch(err => console.log(err))
+        pool.query('create table chatrooms(id serial PRIMARY KEY,name text NOT NULL,icon text,visibility boolean NOT NULL,invitecode text,channels bigint[],users bigint[],roles bigint[],emojis bigint[])').catch(err => console.log(err))
         pool.query('create table emojis(id serial PRIMARY KEY,img text NOT NULL,name text NOT NULL)').catch(err => console.log(err))
         pool.query('create table messages(id serial PRIMARY KEY,msg text NOT NULL,usr bigint NOT NULL,reactions bigint[])').catch(err => console.log(err))
         pool.query('create table reactions(id serial PRIMARY KEY,emoji bigint NOT NULL,usr bigint NOT NULL)').catch(err => console.log(err))

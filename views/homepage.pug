@@ -5,6 +5,9 @@ block main-content
             div(class="servers")
                 div(class="server" id="addServer")
                     img(class="server-icon" src=(style == "dark" ? "../img/white.png" : "../img/black.png"))
+                each server in servers
+                    div(class="server" name=server.id)
+                    
         div(class="mainarea")
             div(class="content")
                 h1(class="page-title") Welcome back 

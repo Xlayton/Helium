@@ -195,9 +195,13 @@ const makeConnection = (ws, head) => {
 
 const homepage = (req, res) => {
     if (req.session.user) {
-        _render(res, "homepage", "Homepage", lNav, req.session.user.theme, {
-            username: req.session.user.username
-        });
+        schema.getUsersChatRooms(req.session.user.id)
+            .then(servers => {
+                _render(res, "homepage", "Homepage", lNav, req.session.user.theme, {
+                    username: req.session.user.username,
+                    servers: servers
+                });
+            });
     } else {
         res.redirect("/signin");
     }
