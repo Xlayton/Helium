@@ -19,7 +19,7 @@ exports.getAllUsers = async () => {
 
 exports.addUser = user => {
     pool
-    .query(`insert into users(name,email,icon,password) values('${user.name}','${user.email}','${user.icon}','${user.password}', 'dark')`)
+    .query(`insert into users(name,email,icon,password,theme) values('${user.name}','${user.email}','${user.icon}','${user.password}', 'dark')`)
     .catch(err => console.error(err));
 };
 
