@@ -26,9 +26,20 @@ const _render = (res, fileName, title, nav, style, opts) => {
     res.render(fileName, options);
 };
 
+const makeImage = user => {
+    if(!fs.existsSync(path.join(__dirname, '../public/.img'))){
+        fs.mkdirSync(path.join(__dirname, '../public/.img'));
+    }
+    if(user.icon !== 'null') {
+        let buff = Buffer.from(user.icon, 'base64');
+        fs.writeFileSync(path.join(__dirname, `../public/.img/${user.id}.png`), buff);
+    }
+        
+}
+
 const viewUsers = (req, res) => {
     schema.getAllUsers().then(users => {
-        // console.log(users);
+        users.forEach(user => makeImage(user));
         _render(res, 'viewUsers', 'View All Users', uNav, "dark", { "userData": users });
     });
 };
@@ -40,7 +51,7 @@ const createUserPage = (req, res) => {
 const createAUser = (req, res) => {
     let uniqueEmail = true;
     schema.getAllUsers().then(allUsers => {
-        allusers.forEach(existingUser => {
+        allUsers.forEach(existingUser => {
             if (existingUser.email == req.body.email) {
                 uniqueEmail = false;
             }
@@ -50,7 +61,6 @@ const createAUser = (req, res) => {
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let user = {
-                id: req.body.userId,
                 name: req.body.username,
                 password: myHash,
                 email: req.body.email,
@@ -86,7 +96,6 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let updatedUser = {
-                id: req.body.userId,
                 name: req.body.username,
                 password: myHash,
                 email: req.body.email,
@@ -117,7 +126,6 @@ const signUserIn = (req, res) => {
             if (thisUser.email == req.body.email) {
                 var response = bcrypt.compareSync(`${req.body.password}`, thisUser.password);
                 if (response) {
-                    console.log(thisUser);
                     req.session.user = {
                         isAuthenicated: true,
                         username: thisUser.name,
