@@ -7,7 +7,7 @@ block main-content
                     img(class="server-icon" src=(style == "dark" ? "../img/white.png" : "../img/black.png"))
                 each server in servers
                     div(class="server" name=server.id)
-                    
+                        img(src=server.icon name=server.id class="server-icon")
         div(class="mainarea")
             div(class="content")
                 h1(class="page-title") Welcome back 

@@ -267,6 +267,9 @@ body::-webkit-scrollbar {
     border-radius: 50%;
     overflow: hidden;
     display: flex;
+    margin-top: 10px;
+    height: 67.5px;
+    width: 67.5px;
 }
 
 #addServer {

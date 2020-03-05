@@ -3,8 +3,11 @@ block main-content
     section(class="chatpage")
         div(class="sidebar")
             div(class="servers")
-                    div(class="server" id="addServer")
-                        img(class="server-icon" src=(style == "dark" ? "../img/white.png" : "../img/black.png"))
+                div(class="server" id="addServer")
+                    img(class="server-icon" src=(style == "dark" ? "../img/white.png" : "../img/black.png"))
+                each server in servers
+                    div(class="server" name=server.id)
+                        img(src=server.icon name=server.id class="server-icon")
         div(class="channel-area")
         div(class="chat-area")
             div(id="display" class="msg-section")
@@ -13,15 +16,17 @@ block main-content
                 button(id="send" class="msg-button") Send
         div(id="makeServerBack")
         div(id="makeServer")
-            form(class="form" method="post" action="/makeServer")
+            form(class="form" method="post" action="/makeServer" enctype="multipart/form-data")
                 section(class="form-elements")
                     p(class="form-title") Make a Server
-                    input(type="text" placeholder="Server Name")
+                    input(type="text" name="name" placeholder="Server Name" required)
                     section(class="radio-container")
                         label(for="Public") Public
-                        input(type="radio" name="visibility" value="0")
+                        input(type="radio" name="visibility" value="0" checked)
                         label(for="Private") Private
                         input(type="radio" name="visibility" value="1")
+                    label(for="icon") Server Icon:
+                    input(type="file" name="icon" accept=".png,.jpg,.jpeg,.gif" required)
                     input(type="submit" id="btn" value="Make Server")
     script(src="/js/serverButtons.js")
     script(src="/js/makeRoom.js")

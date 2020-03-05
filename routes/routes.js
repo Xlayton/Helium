@@ -35,7 +35,22 @@ const makeImage = user => {
         fs.writeFileSync(path.join(__dirname, `../public/.img/${user.id}.png`), buff);
     }
 
-}
+};
+
+const makeServerImage = server => {
+    if (!fs.existsSync(path.join(__dirname, '../public/.img'))) {
+        fs.mkdirSync(path.join(__dirname, '../public/.img'));
+    }
+    if (!fs.existsSync(path.join(__dirname, '../public/.img/servers'))) {
+        fs.mkdirSync(path.join(__dirname, '../public/.img/servers'));
+    }
+    if (server.icon !== 'null') {
+        let buff = Buffer.from(server.icon, 'base64');
+        if (!fs.existsSync(path.join(__dirname, `../public/.img/servers/${server.id}.png`))) {
+            fs.writeFileSync(path.join(__dirname, `../public/.img/servers/${server.id}.png`), buff);
+        }
+    }
+};
 
 const viewUsers = (req, res) => {
     schema.getAllUsers().then(users => {
@@ -207,6 +222,10 @@ const homepage = (req, res) => {
     if (req.session.user) {
         schema.getUsersChatRooms(req.session.user.id)
             .then(servers => {
+                for (let server of servers) {
+                    makeServerImage(server);
+                    server.icon = `/.img/servers/${server.id}.png`;
+                }
                 _render(res, "homepage", "Homepage", lNav, req.session.user.theme, {
                     username: req.session.user.username,
                     servers: servers
@@ -219,7 +238,20 @@ const homepage = (req, res) => {
 
 const chat = (req, res) => {
     if (req.session.user) {
-        _render(res, "chat", "Chat", lNav, req.session.user.theme, { serverID: req.params.id });
+        schema.getUsersChatRooms(req.session.user.id)
+            .then(servers => {
+                let roomIds = [];
+                for (let server of servers) {
+                    makeServerImage(server);
+                    server.icon = `/.img/servers/${server.id}.png`;
+                    roomIds.push(server.id);
+                }
+                if (roomIds.includes(parseInt(req.params.id))) {
+                    _render(res, "chat", "Chat", lNav, req.session.user.theme, { serverID: req.params.id, servers: servers });
+                } else {
+                    res.redirect("/homepage");
+                }
+            });
     } else {
         res.redirect("/signin");
     }
@@ -234,8 +266,26 @@ const makeRoom = (req, res) => {
         let file = fs.readFileSync(targetPath); // reads the new file
         let b64String = file.toString('base64'); // gets the base64 string representation 
         fs.unlink(targetPath, err => console.log(err)); // deletes the new file
-        schema.addChatRoom({ name: req.body.name, icon: b64String, visibility: (req.body.visibility === "0" ? true : false), creatorID: req.session.user.id });
-        res.redirect("/homepage");
+        schema.addChatRoom({ name: req.body.name, icon: b64String, visibility: (req.body.visibility === "0" ? true : false), creatorID: req.session.user.id })
+            .then(() => {
+                res.redirect("/homepage");
+            });
+    } else {
+        res.redirect("/signin");
+    }
+};
+
+const joinRoom = (req, res) => {
+    if (req.session.user) {
+        schema.getChatRoomByInviteCode(parseInt(req.params.inviteCode))
+            .then(server => {
+                schema.addUserToChatRoom(server.id, req.session.user.id);
+                res.redirect("/homepage");
+            })
+            .catch(err => {
+                console.error(err);
+                res.redirect("/homepage");
+            });
     } else {
         res.redirect("/signin");
     }
@@ -256,4 +306,5 @@ module.exports = {
     homepage: homepage,
     chat: chat,
     makeRoom: makeRoom,
+    joinRoom: joinRoom,
 };

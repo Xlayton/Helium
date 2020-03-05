@@ -42,15 +42,10 @@ exports.getUser = async id => {
         .catch(err => console.error(err));
 };
 
-exports.addChatRoom = chatRoom => {
+exports.addChatRoom = async chatRoom => {
         let q = `insert into chatrooms(name,icon,visibility,users,invitecode) values('${chatRoom.name}', '${chatRoom.icon}', ${chatRoom.visibility},ARRAY[${chatRoom.creatorID}],'${parseInt(`${Math.round(new Date().getTime()/1000)}`, 16)}') returning id`;
-    pool
+    return pool
         .query(q)
-        .then(res => {
-            pool
-                .query(`update users set chatrooms = chatrooms || cast(${res.rows[0].id} as bigint) where id=${chatRoom.creatorID}`)
-                .catch(err => console.error(err));
-        })
         .catch(err => console.error(err));
 
 };
@@ -60,6 +55,19 @@ exports.getUsersChatRooms = async userID => {
         .query(`select icon,id from chatrooms where ${userID} = any(users)`)
         .then(res => res.rows)
         .catch(err => console.error(err));
+};
+
+exports.getChatRoomByInviteCode = async inviteCode => {
+    return pool
+    .query(`select * from chatrooms where '${inviteCode}' = invitecode`)
+    .then(res => res.rows[0])
+    .catch(err => console.error(err));
+};
+
+exports.addUserToChatRoom = (roomID, userID) => {
+    pool
+    .query(`update chatrooms set users = users || cast(${userID} as bigint) where id=${roomID}`)
+    .catch(err => console.error(err));
 };
 
 exports.createAllTables = password => {
@@ -72,7 +80,7 @@ exports.createAllTables = password => {
         pool.query('create table messages(id serial PRIMARY KEY,msg text NOT NULL,usr bigint NOT NULL,reactions bigint[])').catch(err => console.log(err))
         pool.query('create table reactions(id serial PRIMARY KEY,emoji bigint NOT NULL,usr bigint NOT NULL)').catch(err => console.log(err))
         pool.query('create table roles(id serial PRIMARY KEY,name text NOT NULL,color text,permission bigint NOT NULL)').catch(err => console.log(err))
-        pool.query('create table users(id serial PRIMARY KEY,name text NOT NULL,email text NOT NULL,icon text,password text NOT NULL,friends bigint[],theme text,chatrooms bigint[])').catch(err => console.log(err))
+        pool.query('create table users(id serial PRIMARY KEY,name text NOT NULL,email text NOT NULL,icon text,password text NOT NULL,friends bigint[],theme text)').catch(err => console.log(err))
     }
 }
 
