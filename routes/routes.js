@@ -5,7 +5,7 @@ const uNav = require("../util/u_nav");
 const lNav = require("../util/l_nav");
 const schema = require("../db/db.js");
 const path = require('path');
-
+//Put theme in session, every time a page is rendered check if user is logged, if so use theme from session else deafult dark
 var websocketList = [];
 /**
  * Renders a page to a response
@@ -28,13 +28,32 @@ const _render = (res, fileName, title, nav, style, opts) => {
 
 const viewUsers = (req, res) => {
     schema.getAllUsers().then(users => {
-        // console.log(users);
-        _render(res, 'viewUsers', 'View All Users', uNav, "dark", { "userData": users });
+        if(req.session.user) {
+            if(req.session.user.isAuthenicated) {
+                _render(res, 'viewUsers', 'View All Users', uNav, req.session.user.theme, { "userData": users });
+            }
+            else {
+                _render(res, 'viewUsers', 'View All Users',uNav, 'dark', { "userData": users });
+            }
+        }
+        else {
+            _render(res, 'viewUsers', 'View All Users',uNav, 'dark', { "userData": users });
+        }   
     });
 };
 
 const createUserPage = (req, res) => {
-    _render(res, 'createUser', "Create a User", uNav, "dark");
+    if(req.session.user) {
+        if(req.session.user.isAuthenicated) {
+            _render(res, 'createUser', 'Create a User', uNav, req.session.user.theme);
+        }
+        else {
+            _render(res, 'createUser', "Create a User", uNav, "dark");
+        }
+    }
+    else {
+        _render(res, 'createUser', "Create a User", uNav, "dark");
+    }
 };
 
 const createAUser = (req, res) => {
@@ -66,8 +85,17 @@ const createAUser = (req, res) => {
 
 const updateUserPage = (req, res) => { //taking user to user creation form
     schema.getUser(req.params.id).then(user => {
-        _render(res, 'updateUser', 'Update a User', uNav, "dark", { "account": user });
-
+        if(req.session.user) {
+            if(req.session.user.isAuthenicated) {
+                _render(res, 'updateUser', 'Update a User', uNav, req.session.user.theme, { "account": user });
+            }
+            else {
+                _render(res, 'updateUser', 'Update a User', uNav, "dark", { "account": user });
+            }
+        }
+        else {
+            _render(res, 'updateUser', 'Update a User', uNav, "dark", { "account": user });
+        }   
     });
 };
 
@@ -90,7 +118,8 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
                 name: req.body.username,
                 password: myHash,
                 email: req.body.email,
-                icon: b64String
+                icon: b64String,
+                theme: req.body.theme
             };
             schema.updateUser(user, updatedUser);
             res.redirect('/seeUsers');
@@ -107,7 +136,17 @@ const deleteUser = (req, res) => { //deletes user with id parameter
 };
 
 const signIn = (req, res) => {
-    _render(res, 'signIn', 'Sign In', uNav, "dark");
+    if(req.session.user) {
+        if(req.session.user.isAuthenicated) {
+            _render(res, 'signIn', 'Sign In', uNav, req.session.user.theme);
+        }
+        else {
+            _render(res, 'signIn', 'Sign In', uNav, "dark");
+        }
+    }
+    else {
+        _render(res, 'signIn', 'Sign In', uNav, "dark");
+    }
 };
 
 const signUserIn = (req, res) => {
@@ -122,7 +161,8 @@ const signUserIn = (req, res) => {
                         username: thisUser.name,
                         email: thisUser.email,
                         id: thisUser.id,
-                        icon: thisUser.icon
+                        icon: thisUser.icon,
+                        theme: thisUser.theme
                     };
                     // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
                     foundUser = true;
@@ -158,7 +198,17 @@ const signUserOut = (req, res) => {
 };
 
 const getIndex = (req, res) => {
-    _render(res, "landingPage", "Helium", uNav, "dark");
+    if(req.session.user) {
+        if(req.session.user.isAuthenicated) {
+            _render(res, 'landingPage', 'Helium', uNav, req.session.user.theme);
+        }
+        else {
+            _render(res, "landingPage", "Helium", uNav, "dark");
+        }
+    }
+    else {
+        _render(res, "landingPage", "Helium", uNav, "dark");
+    }
 };
 
 const makeConnection = (ws, head) => {
