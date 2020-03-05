@@ -121,7 +121,7 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
     let file = fs.readFileSync(targetPath); // reads the new file
     let b64String = file.toString('base64'); // gets the base64 string representation 
     fs.unlink(targetPath, err => console.log(err)); // deletes the new file
-
+    req.session.user.theme = req.body.theme;
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let updatedUser = {
