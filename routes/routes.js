@@ -102,7 +102,7 @@ const createAUser = (req, res) => {
                 icon: null
             };
             schema.addUser(user);
-            res.redirect('/seeUsers');
+            res.redirect('/signin');
         });
     } else {
         res.redirect('/createUser');
@@ -162,7 +162,7 @@ const deleteUser = (req, res) => { //deletes user with id parameter
 const signIn = (req, res) => {
     if(req.session.user) {
         if(req.session.user.isAuthenicated) {
-            _render(res, 'signIn', 'Sign In', uNav, req.session.user.theme);
+            res.redirect("/homepage")
         }
         else {
             _render(res, 'signIn', 'Sign In', uNav, "dark");
@@ -212,15 +212,12 @@ const signUserOut = (req, res) => {
                     console.log(err);
                 } else {
                     res.redirect('/seeUsers');
-                    console.log("User signed out");
                 }
             });
         } else {
-            console.log("You are not the signed-in user");
             res.redirect('/seeUsers');
         }
     } catch (error) {
-        console.log("No one is logged in right now");
         res.redirect('/seeUsers');
     }
 };
@@ -241,14 +238,12 @@ const getIndex = (req, res) => {
 
 const makeConnection = (ws, head) => {
     if (head.session.user) {
-        console.log("Connection made");
         let conn = {
             roomID: head.ws.protocol,
             ws: ws
         };
         websocketList.push(conn);
         ws.on('message', function incoming(message) {
-            console.log('received: %s', message);
             websocketList.forEach(con => {
                 if (con.roomID === conn.roomID) {
                     con.ws.send(`${head.session.user.username}: ${message}`);
@@ -374,6 +369,27 @@ const publicServers = (req, res) => {
         });
 }
 
+const filterRooms = (req, res) => {
+    schema.getPublicServers()
+        .then(servers => {
+            let filtered = []
+            for (let server of servers) {
+                makeServerImage(server);
+                server.icon = `/.img/servers/${server.id}.png`;
+                if(server.name.toLowerCase().includes(req.query.filterText.toLowerCase())) filtered.push(server);
+            }
+            if (req.session.user) {
+                _render(res, "servers", "Public Servers", lNav, req.session.user.theme, {
+                    servers: filtered
+                })
+            } else {
+                _render(res, "servers", "Public Servers", uNav, "dark", {
+                    servers: filtered
+                })
+            }
+        });
+}
+
 module.exports = {
     viewUsers: viewUsers,
     createUserPage: createUserPage,
@@ -391,4 +407,5 @@ module.exports = {
     makeRoom: makeRoom,
     joinRoom: joinRoom,
     publicServers: publicServers,
+    filterRooms: filterRooms,
 };

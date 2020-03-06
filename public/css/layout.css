@@ -342,3 +342,20 @@ body::-webkit-scrollbar {
     max-height: 15vh;
     width: auto;
 }
+
+.filter-form{
+    margin-top: 2vh;
+    display: flex;
+    justify-content: center;
+}
+
+.filter-form .filter-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #efefef;
+    margin: 0 2vw;
+    color:#efefef;
+}
+.filter-form .filter-input::placeholder {
+    color: rgba(250, 250, 250, 0.7);
+}

@@ -1,5 +1,8 @@
 extends layout
 block main-content
+    form(class="filter-form" action="/serversfilter" method="get")
+            input(type="text" class="filter-input" name="filterText" placeholder="Filter Servers...")
+            input(type="submit" value="Filter")
     each server in servers
         div(class="server-listing")
             img(class="server-image" src=server.icon)

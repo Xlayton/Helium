@@ -52,6 +52,7 @@ app.get('/chat/:id', route.chat);
 app.post('/makeServer', urlencodedParser, upload.single("icon"), route.makeRoom);
 app.get('/join/:inviteCode', route.joinRoom);
 app.get("/servers", route.publicServers);
+app.get("/serversfilter", route.filterRooms);
 app.ws("/makeConnection", route.makeConnection);
 
 app.use((req, res, next) => {
