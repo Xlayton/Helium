@@ -251,11 +251,11 @@ const makeConnection = (ws, head) => {
             roomID: head.ws.protocol,
             ws: ws
         };
-        websocketList.push(conn);
+        if(!websocketList.includes(conn)) websocketList.push(conn);
         makeImage(head.session.user);
         ws.on('message', function incoming(message) {
-            websocketList.forEach(ws => {
-                conn.ws.send(`<section class="message"><section class="msg-top"><img class="msg-icon" src="/.img/${head.session.user.id}.png"><span class="username">${head.session.user.username}</span></section><span class="message-text">${message}</span></section>`);
+            websocketList.forEach(con => {
+                con.ws.send(`<section class="message"><section class="msg-top"><img class="msg-icon" src="/.img/${head.session.user.id}.png"><span class="username">${head.session.user.username}</span></section><span class="message-text">${message}</span></section>`);
             });
             ws.on('close', function close() {
                 if (websocketList.includes(conn)) {

@@ -1,5 +1,4 @@
-//Frontend user
-var socket = new WebSocket("ws://" + window.location.origin.substring(5) + "/makeConnection", ("" + serverID));
+var socket = new WebSocket("ws:" + window.location.origin.substring(5) + "/makeConnection", ("" + serverID));
 socket.onmessage = function(e) {
     document.getElementById("display").innerHTML += e.data;
     document.getElementById("display").scrollTop = document.getElementById("display").scrollHeight;
