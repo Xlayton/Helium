@@ -229,7 +229,7 @@ const makeConnection = (ws, head) => {
         ws.on('message', function incoming(message) {
             console.log('received: %s', message);
             websocketList.forEach(ws => {
-                ws.send(`${head.session.user.username}: ${message}`);
+                ws.send(`<section class="message"><img class="msg-icon" src=/.img/${head.session.user.id}.png><span class="username">${head.session.user.username}</span><span class="message-text">${message}</span></section>`);
             });
             //Removes that a user has disconnected, should display name when users are added
             ws.on('close', function close() {
