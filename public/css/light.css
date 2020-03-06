@@ -237,3 +237,16 @@ body {
 .join-server:active {
     background-color: #dcdcdc;
 }
+.message {
+    border: 1px solid #676767
+}
+.msg-top {
+    border: 1px solid #676767;
+}
+.filter-form .filter-input {
+    border-bottom: 1px solid #000;
+    color:#000;
+}
+.filter-form .filter-input::placeholder {
+    color: rgba(0, 0, 0, 0.7);
+}

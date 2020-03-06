@@ -1,7 +1,8 @@
 //Frontend user
 var socket = new WebSocket("ws://" + window.location.origin.substring(5) + "/makeConnection", ("" + serverID));
 socket.onmessage = function(e) {
-    document.getElementById("display").innerHTML += "<p>" + e.data + "</p>";
+    document.getElementById("display").innerHTML += e.data;
+    document.getElementById("display").scrollTop = document.getElementById("display").scrollHeight;
 };
 socket.onopen = function(e) {
     socket.send("Connected");

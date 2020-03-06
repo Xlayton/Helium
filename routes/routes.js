@@ -55,30 +55,32 @@ const makeServerImage = server => {
 const viewUsers = (req, res) => {
     schema.getAllUsers().then(users => {
         users.forEach(user => makeImage(user));
-        if(req.session.user) {
-            if(req.session.user.isAuthenicated) {
-                _render(res, 'viewUsers', 'View All Users', uNav, req.session.user.theme, { "userData": users });
+        if (req.session.user) {
+            if (req.session.user.isAuthenicated) {
+                _render(res, 'viewUsers', 'View All Users', uNav, req.session.user.theme, {
+                    "userData": users
+                });
+            } else {
+                _render(res, 'viewUsers', 'View All Users', uNav, 'dark', {
+                    "userData": users
+                });
             }
-            else {
-                _render(res, 'viewUsers', 'View All Users',uNav, 'dark', { "userData": users });
-            }
+        } else {
+            _render(res, 'viewUsers', 'View All Users', uNav, 'dark', {
+                "userData": users
+            });
         }
-        else {
-            _render(res, 'viewUsers', 'View All Users',uNav, 'dark', { "userData": users });
-        }   
     });
 };
 
 const createUserPage = (req, res) => {
-    if(req.session.user) {
-        if(req.session.user.isAuthenicated) {
+    if (req.session.user) {
+        if (req.session.user.isAuthenicated) {
             _render(res, 'createUser', 'Create a User', uNav, req.session.user.theme);
-        }
-        else {
+        } else {
             _render(res, 'createUser', "Create a User", uNav, "dark");
         }
-    }
-    else {
+    } else {
         _render(res, 'createUser', "Create a User", uNav, "dark");
     }
 };
@@ -111,31 +113,42 @@ const createAUser = (req, res) => {
 
 const updateUserPage = (req, res) => { //taking user to user creation form
     schema.getUser(req.params.id).then(user => {
-        if(req.session.user) {
-            if(req.session.user.isAuthenicated) {
-                _render(res, 'updateUser', 'Update a User', uNav, req.session.user.theme, { "account": user });
+        if (req.session.user) {
+            if (req.session.user.isAuthenicated) {
+                _render(res, 'updateUser', 'Update a User', uNav, req.session.user.theme, {
+                    "account": user
+                });
+            } else {
+                _render(res, 'updateUser', 'Update a User', uNav, "dark", {
+                    "account": user
+                });
             }
-            else {
-                _render(res, 'updateUser', 'Update a User', uNav, "dark", { "account": user });
-            }
+        } else {
+            _render(res, 'updateUser', 'Update a User', uNav, "dark", {
+                "account": user
+            });
         }
-        else {
-            _render(res, 'updateUser', 'Update a User', uNav, "dark", { "account": user });
-        }   
     });
 };
 
 const updateUserDetails = (req, res) => { //after user fills out user creation form
     schema.getUser(req.params.id).then(user => {
-    // https://stackoverflow.com/questions/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
-    if(!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
-    const tempPath = req.file.path; /* name of the input field */
-    const targetPath = path.join(__dirname, 'temp/avatar.png'); // new path for temp file
-    fs.renameSync(tempPath, targetPath) // "moves" the file
-    let file = fs.readFileSync(targetPath); // reads the new file
-    let b64String = file.toString('base64'); // gets the base64 string representation 
-    fs.unlink(targetPath, err => console.log(err)); // deletes the new file
-    req.session.user.theme = req.body.theme;
+        // https://stackoverflow.com/questions/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
+        if (!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
+        const tempPath = req.file.path; /* name of the input field */
+        const targetPath = path.join(__dirname, 'temp/avatar.png'); // new path for temp file
+        fs.renameSync(tempPath, targetPath) // "moves" the file
+        let file = fs.readFileSync(targetPath); // reads the new file
+        let b64String = file.toString('base64'); // gets the base64 string representation 
+        fs.unlink(targetPath, err => console.log(err)); // deletes the new file
+        req.session.user = {
+            isAuthenicated: true,
+            username: req.body.username,
+            email: req.body.email,
+            id: req.session.user.id,
+            icon: b64String,
+            theme: req.body.theme
+        }
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let updatedUser = {
@@ -160,15 +173,13 @@ const deleteUser = (req, res) => { //deletes user with id parameter
 };
 
 const signIn = (req, res) => {
-    if(req.session.user) {
-        if(req.session.user.isAuthenicated) {
+    if (req.session.user) {
+        if (req.session.user.isAuthenicated) {
             res.redirect("/homepage")
-        }
-        else {
+        } else {
             _render(res, 'signIn', 'Sign In', uNav, "dark");
         }
-    }
-    else {
+    } else {
         _render(res, 'signIn', 'Sign In', uNav, "dark");
     }
 };
@@ -223,15 +234,13 @@ const signUserOut = (req, res) => {
 };
 
 const getIndex = (req, res) => {
-    if(req.session.user) {
-        if(req.session.user.isAuthenicated) {
+    if (req.session.user) {
+        if (req.session.user.isAuthenicated) {
             _render(res, 'landingPage', 'Helium', uNav, req.session.user.theme);
-        }
-        else {
+        } else {
             _render(res, "landingPage", "Helium", uNav, "dark");
         }
-    }
-    else {
+    } else {
         _render(res, "landingPage", "Helium", uNav, "dark");
     }
 };
@@ -243,17 +252,17 @@ const makeConnection = (ws, head) => {
             ws: ws
         };
         websocketList.push(conn);
+        makeImage(head.session.user);
         ws.on('message', function incoming(message) {
-            console.log('received: %s', message);
             websocketList.forEach(ws => {
-                ws.send(`<section class="message"><img class="msg-icon" src=/.img/${head.session.user.id}.png><span class="username">${head.session.user.username}</span><span class="message-text">${message}</span></section>`);
+                conn.ws.send(`<section class="message"><section class="msg-top"><img class="msg-icon" src="/.img/${head.session.user.id}.png"><span class="username">${head.session.user.username}</span></section><span class="message-text">${message}</span></section>`);
             });
             ws.on('close', function close() {
                 if (websocketList.includes(conn)) {
                     websocketList = websocketList.filter((cli) => cli !== conn);
                     websocketList.forEach(con => {
                         if (con.roomID === conn.roomID) {
-                            con.ws.send("User Disconnected");
+                            con.ws.send(`${head.session.user.username} Disconnected`);
                         }
                     });
                 }
@@ -375,7 +384,7 @@ const filterRooms = (req, res) => {
             for (let server of servers) {
                 makeServerImage(server);
                 server.icon = `/.img/servers/${server.id}.png`;
-                if(server.name.toLowerCase().includes(req.query.filterText.toLowerCase())) filtered.push(server);
+                if (server.name.toLowerCase().includes(req.query.filterText.toLowerCase())) filtered.push(server);
             }
             if (req.session.user) {
                 _render(res, "servers", "Public Servers", lNav, req.session.user.theme, {
