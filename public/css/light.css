@@ -222,3 +222,18 @@ body {
 #makeServerBack {
     background-color: rgba(220,220,220, 0.8)
 }
+
+.server-listing {
+    border: 1px solid #000;
+}
+
+.join-server {
+    color: #000;
+    background-color: #e8e8e8;
+}
+.join-server:hover {
+    background-color: #efefef;
+}
+.join-server:active {
+    background-color: #dcdcdc;
+}

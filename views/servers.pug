@@ -1,0 +1,7 @@
+extends layout
+block main-content
+    each server in servers
+        div(class="server-listing")
+            img(class="server-image" src=server.icon)
+            h2(class="server-name") Server: #{server.name}
+            a(class="join-server" href=("/join/" + server.invitecode)) Join Server

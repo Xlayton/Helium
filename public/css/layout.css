@@ -324,3 +324,21 @@ body::-webkit-scrollbar {
     text-align:center;
     width:100%;
 }
+
+.server-listing {
+    margin: 2vh 2vw;
+    display:flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+    align-items: center;
+    }
+
+.join-server {
+    text-decoration: none;
+    padding: 5px;
+}
+
+.server-image {
+    max-height: 15vh;
+    width: auto;
+}

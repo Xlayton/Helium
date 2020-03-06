@@ -55,7 +55,9 @@ const makeServerImage = server => {
 const viewUsers = (req, res) => {
     schema.getAllUsers().then(users => {
         users.forEach(user => makeImage(user));
-        _render(res, 'viewUsers', 'View All Users', uNav, "dark", { "userData": users });
+        _render(res, 'viewUsers', 'View All Users', uNav, "dark", {
+            "userData": users
+        });
     });
 };
 
@@ -91,7 +93,9 @@ const createAUser = (req, res) => {
 
 const updateUserPage = (req, res) => { //taking user to user creation form
     schema.getUser(req.params.id).then(user => {
-        _render(res, 'updateUser', 'Update a User', uNav, "dark", { "account": user });
+        _render(res, 'updateUser', 'Update a User', uNav, "dark", {
+            "account": user
+        });
 
     });
 };
@@ -193,7 +197,10 @@ const getIndex = (req, res) => {
 const makeConnection = (ws, head) => {
     if (head.session.user) {
         console.log("Connection made");
-        let conn = { roomID: head.ws.protocol, ws: ws };
+        let conn = {
+            roomID: head.ws.protocol,
+            ws: ws
+        };
         websocketList.push(conn);
         ws.on('message', function incoming(message) {
             console.log('received: %s', message);
@@ -248,9 +255,13 @@ const chat = (req, res) => {
                 }
                 if (roomIds.includes(parseInt(req.params.id))) {
                     schema.getChatRoomInviteCodeById(req.params.id)
-                    .then(server => {
-                        _render(res, "chat", "Chat", lNav, req.session.user.theme, { serverID: req.params.id, servers: servers, invitecode: server.invitecode });
-                    })
+                        .then(server => {
+                            _render(res, "chat", "Chat", lNav, req.session.user.theme, {
+                                serverID: req.params.id,
+                                servers: servers,
+                                invitecode: server.invitecode
+                            });
+                        })
                 } else {
                     res.redirect("/homepage");
                 }
@@ -269,7 +280,12 @@ const makeRoom = (req, res) => {
         let file = fs.readFileSync(targetPath); // reads the new file
         let b64String = file.toString('base64'); // gets the base64 string representation 
         fs.unlink(targetPath, err => console.log(err)); // deletes the new file
-        schema.addChatRoom({ name: req.body.name, icon: b64String, visibility: (req.body.visibility === "0" ? true : false), creatorID: req.session.user.id })
+        schema.addChatRoom({
+                name: req.body.name,
+                icon: b64String,
+                visibility: (req.body.visibility === "0" ? true : false),
+                creatorID: req.session.user.id
+            })
             .then(() => {
                 res.redirect("/homepage");
             });
@@ -294,6 +310,25 @@ const joinRoom = (req, res) => {
     }
 };
 
+const publicServers = (req, res) => {
+    schema.getPublicServers()
+        .then(servers => {
+            for (let server of servers) {
+                makeServerImage(server);
+                server.icon = `/.img/servers/${server.id}.png`;
+            }
+            if (req.session.user) {
+                _render(res, "servers", "Public Servers", lNav, req.session.user.theme, {
+                    servers: servers
+                })
+            } else {
+                _render(res, "servers", "Public Servers", uNav, "dark", {
+                    servers: servers
+                })
+            }
+        });
+}
+
 module.exports = {
     viewUsers: viewUsers,
     createUserPage: createUserPage,
@@ -310,4 +345,5 @@ module.exports = {
     chat: chat,
     makeRoom: makeRoom,
     joinRoom: joinRoom,
+    publicServers: publicServers,
 };

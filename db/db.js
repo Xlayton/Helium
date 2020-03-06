@@ -77,6 +77,13 @@ exports.addUserToChatRoom = (roomID, userID) => {
     .catch(err => console.error(err));
 };
 
+exports.getPublicServers = async() => {
+    return pool
+    .query("select id,name,icon,invitecode from chatrooms where visibility = true")
+    .then(servers => servers.rows)
+    .catch(err => console.error(err));
+}
+
 exports.createAllTables = password => {
     if (password !== process.env.PASSWORD) {
         return;
