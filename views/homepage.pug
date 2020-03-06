@@ -1,6 +1,6 @@
 extends layout
 block main-content
-    section(class="chatpage")
+    section(class="homepage")
         div(class="sidebar")
             div(class="servers")
                 div(class="server" id="addServer")
@@ -8,14 +8,13 @@ block main-content
                 each server in servers
                     div(class="server" name=server.id)
                         img(src=server.icon name=server.id class="server-icon")
-        div(class="channel-area")
-            button(id="copy-invite-code" name=invitecode) Copy Invite Code
-            textarea(style="position:absolute; left:-9999px;" id="invitelink" readonly)
-        div(class="chat-area")
-            div(id="display" class="msg-section")
-            div(class="input-section")
-                input(id="input" class="msg-input" type="text" placeholder="Send Message...")
-                button(id="send" class="msg-button") Send
+        div(class="mainarea")
+            div(class="content")
+                h1(class="page-title") Welcome back 
+                    span(class="username") #{username}
+                div(class="online-friends")
+                    h2(class="friends-title") Online Friends
+                    div(class="friends-container")
         div(id="makeServerBack")
         div(id="makeServer")
             form(class="form" method="post" action="/makeServer" enctype="multipart/form-data")
@@ -30,7 +29,5 @@ block main-content
                     label(for="icon") Server Icon:
                     input(type="file" name="icon" accept=".png,.jpg,.jpeg,.gif" required)
                     input(type="submit" id="btn" value="Make Server")
-    script(src="/js/serverButtons.js")
-    script(src="/js/makeRoom.js")
-    script var serverID = #{serverID}
-    script(src="/js/connection.js")
+    script(src="./js/serverButtons.js")
+    script(src="./js/makeRoom.js")

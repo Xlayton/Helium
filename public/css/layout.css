@@ -84,6 +84,7 @@ body::-webkit-scrollbar {
     font-style: italic;
     font-size: 4vh;
     margin: 0;
+    text-align: center;
 }
 
 .form-elements {
@@ -117,12 +118,13 @@ body::-webkit-scrollbar {
 .channel-area {
     grid-area: channels;
     min-width: 150px;
+    position:relative;
 }
 
 .chat-area {
     display: grid;
     grid-template-rows: 95fr 5fr;
-    grid-template-areas: "chat" "msg-box";
+    grid-template-areas: "chat""msg-box";
     grid-area: main-area;
 }
 
@@ -175,18 +177,17 @@ body::-webkit-scrollbar {
     overflow: auto;
 }
 
+.username {
+    font-style: italic;
+}
+
 .content,
 .online-friends {
     display: grid;
-    grid-template-rows: 10fr 90fr;
-    grid-template-areas: "title" "content";
+    grid-template-rows: 1fr 5fr;
+    grid-template-areas: "title""content";
     height: 100%;
     width: 100%;
-}
-
-.content {
-    border-radius: 15px;
-    margin: 0 2vmin;
 }
 
 .page-title {
@@ -242,4 +243,119 @@ body::-webkit-scrollbar {
 .friend-image-container img {
     max-width: 110%;
     max-height: 110%;
+}
+
+.servers {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    overflow-y: scroll;
+}
+
+.servers::-webkit-scrollbar {
+    width: 10px;
+    margin-right: 1px;
+}
+
+.servers::-webkit-scrollbar-thumb {
+    border-radius: 50px;
+}
+
+.server {
+    width: 75%;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    margin-top: 10px;
+    height: 67.5px;
+    width: 67.5px;
+}
+
+#addServer {
+    order: 0;
+}
+
+.server:hover {
+    border-radius: 25%;
+}
+
+.server-icon {
+    position: relative;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#makeServer {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: none;
+    width: 50%;
+    height: 50%;
+}
+
+#makeServer .form .form-elements {
+    width: 100%;
+    height: 100%;
+}
+
+#makeServer .form .form-elements * {
+    margin-top: 2vh;
+}
+
+#makeServerBack {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+#copy-invite-code {
+    position: absolute;
+    bottom:0;
+    text-align:center;
+    width:100%;
+}
+
+.server-listing {
+    margin: 2vh 2vw;
+    display:flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+    align-items: center;
+    }
+
+.join-server {
+    text-decoration: none;
+    padding: 5px;
+}
+
+.server-image {
+    max-height: 15vh;
+    width: auto;
+}
+
+.filter-form{
+    margin-top: 2vh;
+    display: flex;
+    justify-content: center;
+}
+
+.filter-form .filter-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #efefef;
+    margin: 0 2vw;
+    color:#efefef;
+}
+.filter-form .filter-input::placeholder {
+    color: rgba(250, 250, 250, 0.7);
 }

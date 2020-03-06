@@ -214,3 +214,30 @@ body {
     border: .5px solid #efefef;
     background-color: #676767;
 }
+
+.servers::-webkit-scrollbar-thumb {
+    background: #676767;
+    border: 2px solid #3d3d3d;
+}
+.server {
+    background-color: #676767;
+}
+#makeServerBack {
+    background-color: rgba(103,103,103, 0.8)
+}
+
+.server-listing {
+    border: 1px solid #efefef;
+}
+
+.join-server {
+    color: #efefef;
+    background-color: #3d3d3d;
+    border: 1px solid #efefef;
+}
+.join-server:hover {
+    background-color: #676767;
+}
+.join-server:active {
+    background-color: #a2a2a2;
+}
