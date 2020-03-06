@@ -8,10 +8,10 @@ block main-content
     br
     h2 Friend Requests
     each user in requests
-        p #{user.username} - #{user.email}
-            form(id="acceptRequest" method="POST" action='/acceptRequest/'+user.id)
+        p #{user[0]} - #{user[1]}
+            form(id="acceptRequest" method="POST" action='/acceptRequest/'+user[2])
                 p
                     input(type='submit' id='btn' value='Accept')
-            form(id="rejectRequest" method="POST" action='/rejectRequest/'+user.id)
+            form(id="rejectRequest" method="POST" action='/rejectRequest/'+user[2])
                 p
                     input(type='submit' id='btn' value='Reject')

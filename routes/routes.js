@@ -198,7 +198,17 @@ const makeConnection = (ws, head) => {
 
 const friendRequests = (req,res) => {
     schema.getUserById(req.session.user.id).then(thisUser => {
-        _render(res, "friendRequests", "Friend Requests", uNav, "dark", {"requests": thisUser.friendreqs, "loggedInUser": thisUser});
+        if(thisUser.friendreqs == null){
+            thisUser.friendreqs = [];
+        }
+        var requests = [];
+        thisUser.friendreqs.forEach(reqId => {
+            schema.getUserById(reqId).then(reqUser => {
+                var reqUserInfo = [reqUser.username, reqUser.email, reqUser.id];
+                requests.push(reqUserInfo);
+            })
+        });
+        _render(res, "friendRequests", "Friend Requests", uNav, "dark", {"requests": requests, "loggedInUser": thisUser});
     });
 }
 
