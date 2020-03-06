@@ -244,16 +244,9 @@ const makeConnection = (ws, head) => {
         };
         websocketList.push(conn);
         ws.on('message', function incoming(message) {
-<<<<<<< HEAD
             console.log('received: %s', message);
             websocketList.forEach(ws => {
                 ws.send(`<section class="message"><img class="msg-icon" src=/.img/${head.session.user.id}.png><span class="username">${head.session.user.username}</span><span class="message-text">${message}</span></section>`);
-=======
-            websocketList.forEach(con => {
-                if (con.roomID === conn.roomID) {
-                    con.ws.send(`${head.session.user.username}: ${message}`);
-                }
->>>>>>> e3ff9fe2362c3c76578df194a00cdb2403de5ab2
             });
             ws.on('close', function close() {
                 if (websocketList.includes(conn)) {
