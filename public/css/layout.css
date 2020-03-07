@@ -11,6 +11,14 @@ body::-webkit-scrollbar {
     display: hidden;
 }
 
+.main-content {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
 .sidebar {
     display: flex;
     flex-flow: column;
