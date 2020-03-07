@@ -11,7 +11,17 @@ html
                 p E-mail:&nbsp;
                     input(type='email' id='emailUpdate' name="email" value=account.email)
                 p Icon:&nbsp;
-                    input(type='file' id='iconUpdate' name='icon' value=account.icon accept="image/*") 
+                    input(type='file' id='iconUpdate' name='icon' value=account.icon accept="image/*")
+                if account.theme == "dark"
+                    p Dark Theme:&nbsp;
+                        input(type='radio' id='themeDark' name='theme' value='dark' checked)
+                    p Light Theme:&nbsp;
+                        input(type='radio' id='themeLight' name='theme' value='light')
+                else
+                    p Dark Theme:&nbsp;
+                        input(type='radio' id='themeDark' name='theme' value='dark')
+                    p Light Theme:&nbsp;
+                        input(type='radio' id='themeLight' name='theme' value='light' checked)
                 p
                     input(type='submit' class='btn' value='Update Account')    
         script(src="/backend.js")
