@@ -285,6 +285,7 @@ const homepage = (req, res) => {
                 }
                 _render(res, "homepage", "Homepage", lNav, req.session.user.theme, {
                     username: req.session.user.username,
+                    status: status,
                     servers: servers
                 });
             });
@@ -308,6 +309,7 @@ const chat = (req, res) => {
                         .then(server => {
                             _render(res, "chat", "Chat", lNav, req.session.user.theme, {
                                 serverID: req.params.id,
+                                status: status,
                                 servers: servers,
                                 invitecode: server.invitecode
                             });
