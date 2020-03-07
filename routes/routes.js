@@ -277,13 +277,16 @@ const homepage = (req, res) => {
     if (req.session.user) {
         schema.getUsersChatRooms(req.session.user.id)
             .then(servers => {
+                makeImage(req.session.user);
                 for (let server of servers) {
                     makeServerImage(server);
                     server.icon = `/.img/servers/${server.id}.png`;
                 }
                 _render(res, "homepage", "Homepage", lNav, req.session.user.theme, {
                     username: req.session.user.username,
-                    servers: servers
+                    servers: servers,
+                    userImg: `/.img/${req.session.user.id}.png`,
+                    userId: req.session.user.id
                 });
             });
     } else {
