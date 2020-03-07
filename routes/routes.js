@@ -40,7 +40,7 @@ const makeImage = user => {
 const viewUsers = (req, res) => {
     schema.getAllUsers().then(users => {
         users.forEach(user => makeImage(user));
-        _render(res, 'viewUsers', 'View All Users', uNav, "dark", { "userData": users });
+        _render(res, 'viewUsers', 'View All Users', uNav, "dark", { "userData": users, "loggedInName": req.session.user });
     });
 };
 
@@ -64,9 +64,7 @@ const createAUser = (req, res) => {
                 name: req.body.username,
                 password: myHash,
                 email: req.body.email,
-                icon: null/*,
-                friendreqs: '[]',
-                friends: '[]'*/
+                icon: null
             };
             schema.addUser(user);
             res.redirect('/seeUsers');
@@ -110,7 +108,6 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
 };
 
 const deleteUser = (req, res) => { //deletes user with id parameter
-    //end user session
     schema.getUserById(req.params.id).then(user => {
         schema.removeUser(user);
         res.redirect('/seeUsers');
@@ -198,55 +195,36 @@ const makeConnection = (ws, head) => {
 
 const friendRequests = (req,res) => {
     schema.getUserById(req.session.user.id).then(thisUser => {
-        if(thisUser.friendreqs == null){
-            thisUser.friendreqs = [];
-        }
-        var requests = [];
-        thisUser.friendreqs.forEach(reqId => {
-            schema.getUserById(reqId).then(reqUser => {
-                var reqUserInfo = [reqUser.username, reqUser.email, reqUser.id];
-                requests.push(reqUserInfo);
-            })
-        });
-        _render(res, "friendRequests", "Friend Requests", uNav, "dark", {"requests": requests, "loggedInUser": thisUser});
+        schema.getUsersFromFriendRequests(thisUser).then(users => {
+            _render(res, "friendRequests", "Friend Requests", uNav, "dark", {"requests": users, "loggedInUser": thisUser});
+        })
     });
 }
 
 const sendFriendRequest = (req, res) => {
-    schema.getUserByEmail(req.body.email).then(searchedUser => {
-        schema.getUserById(req.session.user.id).then(currentUser => {
-            searchedUser.friendreqs.push(currentUser.id);
-            res.redirect('/friendRequests');
+    schema.getUserByEmail(req.body.email).then(searchedUser => { //user whose email was entered
+        schema.getUserById(req.session.user.id).then(currentUser => { //user who is signed in
+            schema.addUserToFriendRequests(currentUser,searchedUser)
+            res.redirect('/seeUsers');
         })
     });
 }
 
 const acceptRequest = (req, res) => {
-    schema.getUserById(req.params.id).then(searchedUser => {
-        schema.getUserById(req.session.user.id).then(currentUser => {
-            let index = 0;
-            searchedUser.friendreqs.forEach(usersId => {
-                if(usersId == searchedUser.id){
-                    index = searchedUser.friendreqs.indexOf(usersId);
-                }
-            });
-            searchedUser.friendreqs.splice(index, 1);
-            searchedUser.friends.push(currentUser.id);
+    schema.getUserById(req.params.id).then(searchedUser => { //user whose email was entered
+        schema.getUserById(req.session.user.id).then(currentUser => { //user who is signed in
+            schema.removeUserFromFriendRequests(currentUser, searchedUser);
+            schema.addUserToFriendList(currentUser, searchedUser);
+            schema.addUserToFriendList(searchedUser, currentUser);
             res.redirect('/friendRequests');
         });
     })
 }
 
 const rejectRequest = (req, res) => {
-    schema.getUserById(req.params.id).then(searchedUser => {
-        schema.getUserById(req.session.user.id).then(currentUser => {
-            let index = 0;
-            searchedUser.friendreqs.forEach(usersId => {
-                if(usersId == searchedUser.id){
-                    index = searchedUser.friendreqs.indexOf(usersId);
-                }
-            });
-            searchedUser.friendreqs.splice(index, 1);
+    schema.getUserById(req.params.id).then(searchedUser => {//user whose email was entered
+        schema.getUserById(req.session.user.id).then(currentUser => { //user who is signed in
+            schema.removeUserFromFriendRequests(currentUser, searchedUser);
             res.redirect('/friendRequests');
         });
     })

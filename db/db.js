@@ -19,7 +19,7 @@ exports.getAllUsers = async () => {
 
 exports.addUser = user => {
     pool
-    .query(`insert into users(name,email,icon,password) values('${user.name}','${user.email}','${user.icon}','${user.password}')`)
+    .query(`insert into users(name,email,icon,password,friends,friendreqs) values('${user.name}','${user.email}','${user.icon}','${user.password}',ARRAY[]::BIGINT[], ARRAY[]::BIGINT[])`)
     .catch(err => console.error(err));
 };
 
@@ -35,6 +35,30 @@ exports.updateUser = (user, newUser) => {
     .catch(err => console.error(err));
 };
 
+exports.addUserToFriendRequests = (requestedUser, currentUser) => {
+    pool
+    .query(`update users set friendreqs = friendreqs || cast(${requestedUser.id} as bigint) where id=${currentUser.id}`)
+    .catch(err => console.error(err));
+}
+
+exports.removeUserFromFriendRequests = (requestedUser, currentUser) => {
+    pool
+    .query(`update users set friendreqs = array_remove(friendreqs, cast(${currentUser.id} as bigint)) where id=${requestedUser.id}`)
+    .catch(err => console.error(err));
+}
+
+exports.addUserToFriendList = (requestedUser, currentUser) => {
+    pool
+    .query(`update users set friends = friends || cast(${requestedUser.id} as bigint) where id=${currentUser.id}`)
+    .catch(err => console.error(err));
+}
+
+exports.removeUserFromFriendList = (requestedUser, currentUser) => {
+    pool
+    .query(`update users set friends = array_remove(friends, cast(${currentUser.id} as bigint)) where id=${requestedUser.id}`)
+    .catch(err => console.error(err));
+}
+
 exports.getUserById = async id => {
     return pool
     .query(`select * from users where id=${id}`)
@@ -44,10 +68,24 @@ exports.getUserById = async id => {
 
 exports.getUserByEmail = async email => {
     return pool
-    .query(`select * from users where email=${email}`)
+    .query(`select * from users where email='${email}'`)
     .then(res => res.rows[0])
     .catch(err => console.error(err));
 };
+
+exports.getUsersFromFriendRequests = async user => {
+    return pool
+    .query(`select * from users where id in (${user.friendreqs.join(",")})`)
+    .then(res => res.rows)
+    .catch(err => console.error(err));
+}
+
+exports.getUsersFromFriends = async user => {
+    return pool
+    .query(`select * from users where id in ${user.friends.join(",")}`)
+    .then(res => res.rows)
+    .catch(err => console.error(err));
+}
 
 exports.createAllTables = password => {
     if(password !== process.env.PASSWORD) {

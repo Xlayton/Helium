@@ -7,11 +7,12 @@ block main-content
             input(type='submit' id='btn' value='Send Friend Request')
     br
     h2 Friend Requests
-    each user in requests
-        p #{user[0]} - #{user[1]}
-            form(id="acceptRequest" method="POST" action='/acceptRequest/'+user[2])
-                p
-                    input(type='submit' id='btn' value='Accept')
-            form(id="rejectRequest" method="POST" action='/rejectRequest/'+user[2])
-                p
-                    input(type='submit' id='btn' value='Reject')
+    if(requests != null)
+        each user in requests
+            p #{user.name} - #{user.email}
+                form(id="acceptRequest" method="POST" action='/acceptRequest/'+user.id)
+                    p
+                        input(type='submit' id='btn' value='Accept')
+                form(id="rejectRequest" method="POST" action='/rejectRequest/'+user.id)
+                    p
+                        input(type='submit' id='btn' value='Reject')
