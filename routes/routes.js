@@ -211,7 +211,7 @@ const signUserIn = (req, res) => {
             }
         });
     } else {
-        res.redirect("homepage");
+        res.redirect("/homepage");
     }
 };
 
@@ -251,7 +251,7 @@ const makeConnection = (ws, head) => {
             roomID: head.ws.protocol,
             ws: ws
         };
-        if(!websocketList.includes(conn)) websocketList.push(conn);
+        if (!websocketList.includes(conn)) websocketList.push(conn);
         makeImage(head.session.user);
         ws.on('message', function incoming(message) {
             websocketList.forEach(con => {
