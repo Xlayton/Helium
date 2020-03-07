@@ -16,15 +16,13 @@ const PORT = process.env.PORT;
 // require('./db/db').createAllTables(process.env.PASSWORD);
 
 const app = express();
-app.use(express.static(path.join(__dirname+'/public')));
+const expressWs = require("express-ws")(app);
+app.use(express.static(path.join(__dirname + '/public')));
 
 const httpServer = http.createServer(app);
-httpServer.listen(parseInt(PORT) + 1, () => {
-    console.log(`Server Listening on port: ${parseInt(PORT) + 1}`)
-});
+httpServer.listen(parseInt(PORT) + 1);
 
 app.set('view engine', 'pug');
-const expressWs = require("express-ws")(app);
 app.set('views', __dirname + '/views');
 app.use(expressSession({
     secret: process.env.SECRET,
@@ -42,13 +40,19 @@ const upload = multer({
 app.get("/", route.getIndex);
 app.get('/seeUsers', route.viewUsers);
 app.get('/createUser', route.createUserPage);
-app.post('/createUser',urlencodedParser, route.createAUser);
+app.post('/createUser', urlencodedParser, route.createAUser);
 app.get('/updateUser/:id', route.updateUserPage);
 app.post('/updateUser/:id', urlencodedParser, upload.single('icon'), route.updateUserDetails);
 app.get('/deleteUser/:id', route.deleteUser);
 app.get('/signIn', route.signIn);
 app.post('/signIn', urlencodedParser, route.signUserIn);
 app.get('/signOut/:id', route.signUserOut);
+app.get('/homepage', route.homepage);
+app.get('/chat/:id', route.chat);
+app.post('/makeServer', urlencodedParser, upload.single("icon"), route.makeRoom);
+app.get('/join/:inviteCode', route.joinRoom);
+app.get("/servers", route.publicServers);
+app.get("/serversfilter", route.filterRooms);
 app.ws("/makeConnection", route.makeConnection);
 
 app.use((req, res, next) => {
