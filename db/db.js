@@ -19,7 +19,7 @@ exports.getAllUsers = async () => {
 
 exports.addUser = user => {
     pool
-    .query(`insert into users(name,email,icon,password,theme) values('${user.name}','${user.email}','${user.icon}','${user.password}', 'dark')`)
+    .query(`insert into users(name,email,icon,password,theme,status) values('${user.name}','${user.email}','${user.icon}','${user.password}', 'dark', 'online')`)
     .catch(err => console.error(err));
 };
 
@@ -31,7 +31,7 @@ exports.removeUser = user => {
 
 exports.updateUser = (user, newUser) => {
     pool
-    .query(`update users set name='${newUser.name}', email='${newUser.email}', icon='${newUser.icon}', password='${newUser.password}', theme='${newUser.theme}' where id = ${user.id}`)
+    .query(`update users set name='${newUser.name}', email='${newUser.email}', icon='${newUser.icon}', password='${newUser.password}', theme='${newUser.theme}', status='${newUser.status}' where id = ${user.id}`)
     .catch(err => console.error(err));
 };
 

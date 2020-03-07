@@ -98,7 +98,7 @@ const updateUserPage = (req, res) => { //taking user to user creation form
     schema.getUser(req.params.id).then(user => {
         if(req.session.user) {
             if(req.session.user.isAuthenicated) {
-                _render(res, 'updateUser', 'Update a User', uNav, req.session.user.theme, { "account": user });
+                _render(res, 'updateUser', 'Update a User', uNav, req.session.user.theme, req.session.user.status, { "account": user });
             }
             else {
                 _render(res, 'updateUser', 'Update a User', uNav, "dark", { "account": user });
@@ -122,6 +122,7 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
     let b64String = file.toString('base64'); // gets the base64 string representation 
     fs.unlink(targetPath, err => console.log(err)); // deletes the new file
     req.session.user.theme = req.body.theme;
+    req.session.user.status = req.body.status;
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let updatedUser = {
@@ -129,7 +130,8 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
                 password: myHash,
                 email: req.body.email,
                 icon: b64String,
-                theme: req.body.theme
+                theme: req.body.theme,
+                status: req.body.status
             };
             schema.updateUser(user, updatedUser);
             res.redirect('/seeUsers');
@@ -172,7 +174,8 @@ const signUserIn = (req, res) => {
                         email: thisUser.email,
                         id: thisUser.id,
                         icon: thisUser.icon,
-                        theme: thisUser.theme
+                        theme: thisUser.theme,
+                        status: thisUser.status
                     };
                     // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
                     foundUser = true;
