@@ -156,7 +156,8 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
                 password: myHash,
                 email: req.body.email,
                 icon: b64String,
-                theme: req.body.theme
+                theme: req.body.theme,
+                status: req.body.status
             };
             schema.updateUser(user, updatedUser);
             res.redirect('/seeUsers');
@@ -197,13 +198,14 @@ const signUserIn = (req, res) => {
                             email: thisUser.email,
                             id: thisUser.id,
                             icon: thisUser.icon,
-                            theme: thisUser.theme
+                            theme: thisUser.theme,
+                            status: thisUser.status
                         };
-                        // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
-                        foundUser = true;
-                        res.redirect('/homepage');
+                    // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
+                    foundUser = true;
+                    res.redirect('/seeUsers');
                     }
-                }
+                }   
             }
             if (!foundUser) {
                 res.redirect('/signIn');
@@ -319,6 +321,7 @@ const homepage = (req, res) => {
                 }
                 _render(res, "homepage", "Homepage", lNav, req.session.user.theme, {
                     username: req.session.user.username,
+                    status: status,
                     servers: servers
                 });
             });
@@ -342,6 +345,7 @@ const chat = (req, res) => {
                         .then(server => {
                             _render(res, "chat", "Chat", lNav, req.session.user.theme, {
                                 serverID: req.params.id,
+                                status: status,
                                 servers: servers,
                                 invitecode: server.invitecode
                             });

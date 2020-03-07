@@ -20,6 +20,27 @@ html
                         input(type='radio' id='themeDark' name='theme' value='dark')
                     p Light Theme:&nbsp;
                         input(type='radio' id='themeLight' name='theme' value='light' checked)
+                if account.status == "online"
+                    p Online:&nbsp;
+                        input(type='radio' id='statusOnline' name='status' value='online' checked)
+                    p Idle:&nbsp;
+                        input(type='radio' id='statusIdle' name='status' value='idle')
+                    p Busy:&nbsp;
+                        input(type='radio' id='statusBusy' name='status' value='busy')
+                else if account.status == "idle"
+                    p Online:&nbsp;
+                        input(type='radio' id='statusOnline' name='status' value='online')
+                    p Idle:&nbsp;
+                        input(type='radio' id='statusIdle' name='status' value='idle' checked)
+                    p Busy:&nbsp;
+                        input(type='radio' id='statusBusy' name='status' value='busy')
+                else
+                    p Online:&nbsp;
+                        input(type='radio' id='statusOnline' name='status' value='online')
+                    p Idle:&nbsp;
+                        input(type='radio' id='statusIdle' name='status' value='idle')
+                    p Busy:&nbsp;
+                        input(type='radio' id='statusBusy' name='status' value='busy' checked)
                 p
                     input(type='submit' class='btn' value='Update Account')    
         script(src="/backend.js")

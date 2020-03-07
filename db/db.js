@@ -19,7 +19,7 @@ exports.getAllUsers = async() => {
 
 exports.addUser = user => {
     pool
-    .query(`insert into users(name,email,icon,password,friends,friendreqs,theme) values('${user.name}','${user.email}','${user.icon}','${user.password}',ARRAY[]::BIGINT[], ARRAY[]::BIGINT[],'dark')`)
+    .query(`insert into users(name,email,icon,password,friends,friendreqs,theme,status) values('${user.name}','${user.email}','${user.icon}','${user.password}',ARRAY[]::BIGINT[], ARRAY[]::BIGINT[],'dark','online')`)
     .catch(err => console.error(err));
 };
 
@@ -31,7 +31,7 @@ exports.removeUser = user => {
 
 exports.updateUser = (user, newUser) => {
     pool
-    .query(`update users set name='${newUser.name}', email='${newUser.email}', icon='${newUser.icon}', password='${newUser.password}', theme='${newUser.theme}' where id = ${user.id}`)
+    .query(`update users set name='${newUser.name}', email='${newUser.email}', icon='${newUser.icon}', password='${newUser.password}', theme='${newUser.theme}', status='${newUser.status}' where id = ${user.id}`)
     .catch(err => console.error(err));
 };
 
@@ -138,7 +138,8 @@ exports.createAllTables = password => {
         pool.query('create table messages(id serial PRIMARY KEY,msg text NOT NULL,usr bigint NOT NULL,reactions bigint[])').catch(err => console.log(err))
         pool.query('create table reactions(id serial PRIMARY KEY,emoji bigint NOT NULL,usr bigint NOT NULL)').catch(err => console.log(err))
         pool.query('create table roles(id serial PRIMARY KEY,name text NOT NULL,color text,permission bigint NOT NULL)').catch(err => console.log(err))
-        pool.query('create table users(id serial PRIMARY KEY,name text NOT NULL,email text NOT NULL,icon text,password text NOT NULL,friends bigint[],friendReqs bigint[],theme text)').catch(err => console.log(err))
+        pool.query('create table users(id serial PRIMARY KEY,name text NOT NULL,email text NOT NULL,icon text,password text NOT NULL,friends bigint[],friendReqs bigint[],theme text,status text)').catch(err => console.log(err))
+
     }
 }
 
