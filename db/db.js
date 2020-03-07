@@ -1,5 +1,7 @@
 require('dotenv').config();
-const { Pool } = require('pg');
+const {
+    Pool
+} = require('pg');
 
 const pool = new Pool({
     host: process.env.DBHOST,
@@ -10,7 +12,7 @@ const pool = new Pool({
     database: process.env.DB
 });
 
-exports.getAllUsers = async() => {
+exports.getAllUsers = async () => {
     return pool
         .query('select * from users')
         .then(res => res.rows)
@@ -19,8 +21,8 @@ exports.getAllUsers = async() => {
 
 exports.addUser = user => {
     pool
-    .query(`insert into users(name,email,icon,password,friends,friendreqs,theme,status) values('${user.name}','${user.email}','${user.icon}','${user.password}',ARRAY[]::BIGINT[], ARRAY[]::BIGINT[],'dark','online')`)
-    .catch(err => console.error(err));
+        .query(`insert into users(name,email,icon,password,friends,friendreqs,theme,status) values('${user.name}','${user.email}','${user.icon}','${user.password}',ARRAY[]::BIGINT[], ARRAY[]::BIGINT[],'dark','online')`)
+        .catch(err => console.error(err));
 };
 
 exports.removeUser = user => {
@@ -31,32 +33,32 @@ exports.removeUser = user => {
 
 exports.updateUser = (user, newUser) => {
     pool
-    .query(`update users set name='${newUser.name}', email='${newUser.email}', icon='${newUser.icon}', password='${newUser.password}', theme='${newUser.theme}', status='${newUser.status}' where id = ${user.id}`)
-    .catch(err => console.error(err));
+        .query(`update users set name='${newUser.name}', email='${newUser.email}', icon='${newUser.icon}', password='${newUser.password}', theme='${newUser.theme}', status='${newUser.status}' where id = ${user.id}`)
+        .catch(err => console.error(err));
 };
 
 exports.addUserToFriendRequests = (requestedUser, currentUser) => {
     pool
-    .query(`update users set friendreqs = friendreqs || cast(${requestedUser.id} as bigint) where id=${currentUser.id}`)
-    .catch(err => console.error(err));
+        .query(`update users set friendreqs = friendreqs || cast(${requestedUser.id} as bigint) where id=${currentUser.id}`)
+        .catch(err => console.error(err));
 }
 
 exports.removeUserFromFriendRequests = (requestedUser, currentUser) => {
     pool
-    .query(`update users set friendreqs = array_remove(friendreqs, cast(${currentUser.id} as bigint)) where id=${requestedUser.id}`)
-    .catch(err => console.error(err));
+        .query(`update users set friendreqs = array_remove(friendreqs, cast(${currentUser.id} as bigint)) where id=${requestedUser.id}`)
+        .catch(err => console.error(err));
 }
 
 exports.addUserToFriendList = (requestedUser, currentUser) => {
     pool
-    .query(`update users set friends = friends || cast(${requestedUser.id} as bigint) where id=${currentUser.id}`)
-    .catch(err => console.error(err));
+        .query(`update users set friends = friends || cast(${requestedUser.id} as bigint) where id=${currentUser.id}`)
+        .catch(err => console.error(err));
 }
 
 exports.removeUserFromFriendList = (requestedUser, currentUser) => {
     pool
-    .query(`update users set friends = array_remove(friends, cast(${currentUser.id} as bigint)) where id=${requestedUser.id}`)
-    .catch(err => console.error(err));
+        .query(`update users set friends = array_remove(friends, cast(${currentUser.id} as bigint)) where id=${requestedUser.id}`)
+        .catch(err => console.error(err));
 }
 
 exports.getUserById = async id => {
@@ -67,7 +69,7 @@ exports.getUserById = async id => {
 };
 
 exports.addChatRoom = async chatRoom => {
-        let q = `insert into chatrooms(name,icon,visibility,users,invitecode) values('${chatRoom.name}', '${chatRoom.icon}', ${chatRoom.visibility},ARRAY[${chatRoom.creatorID}],'${parseInt(`${Math.round(new Date().getTime()/1000)}`, 16)}') returning id`;
+    let q = `insert into chatrooms(name,icon,visibility,users,invitecode) values('${chatRoom.name}', '${chatRoom.icon}', ${chatRoom.visibility},ARRAY[${chatRoom.creatorID}],'${parseInt(`${Math.round(new Date().getTime()/1000)}`, 16)}') returning id`;
     return pool
         .query(q)
         .catch(err => console.error(err));
@@ -83,49 +85,56 @@ exports.getUsersChatRooms = async userID => {
 
 exports.getChatRoomByInviteCode = async inviteCode => {
     return pool
-    .query(`select * from chatrooms where '${inviteCode}' = invitecode`)
-    .then(res => res.rows[0])
-    .catch(err => console.error(err));
+        .query(`select * from chatrooms where '${inviteCode}' = invitecode`)
+        .then(res => res.rows[0])
+        .catch(err => console.error(err));
 };
 
 exports.getUserByEmail = async email => {
     return pool
-    .query(`select * from users where email='${email}'`)
-    .then(res => res.rows[0])
-    .catch(err => console.error(err));
+        .query(`select * from users where email='${email}'`)
+        .then(res => res.rows[0])
+        .catch(err => console.error(err));
 };
 exports.getChatRoomInviteCodeById = async roomID => {
     return pool
-    .query(`select invitecode from chatrooms where id = cast(${roomID} as bigint)`)
-    .then(res => res.rows[0])
-    .catch(err => console.error(err));
+        .query(`select invitecode from chatrooms where id = cast(${roomID} as bigint)`)
+        .then(res => res.rows[0])
+        .catch(err => console.error(err));
 };
 
 exports.getUsersFromFriendRequests = async user => {
     return pool
-    .query(`select * from users where id in (${user.friendreqs.join(",")})`)
-    .then(res => res.rows)
-    .catch(err => console.error(err));
+        .query(`select * from users where id in (${user.friendreqs.join(",")})`)
+        .then(res => res.rows)
+        .catch(err => console.error(err));
 }
 
 exports.getUsersFromFriends = async user => {
     return pool
-    .query(`select * from users where id in ${user.friends.join(",")}`)
-    .then(res => res.rows)
-    .catch(err => console.error(err))
+        .query(`select * from users where id in ${user.friends.join(",")}`)
+        .then(res => res.rows)
+        .catch(err => console.error(err))
 };
+
+exports.getFriendsByUserId = async userId => {
+    return pool
+        .query(`select * from users u1 join users u2 on u2.id = any(u1.friends) where u1.id = ${userId}`)
+        .then(res => res.rows)
+        .catch(err => console.error(err));
+}
 
 exports.addUserToChatRoom = (roomID, userID) => {
     pool
-    .query(`update chatrooms set users = users || cast(${userID} as bigint) where id=${roomID}`)
-    .catch(err => console.error(err));
+        .query(`update chatrooms set users = users || cast(${userID} as bigint) where id=${roomID}`)
+        .catch(err => console.error(err));
 };
 
-exports.getPublicServers = async() => {
+exports.getPublicServers = async () => {
     return pool
-    .query("select id,name,icon,invitecode from chatrooms where visibility = true")
-    .then(servers => servers.rows)
-    .catch(err => console.error(err));
+        .query("select id,name,icon,invitecode from chatrooms where visibility = true")
+        .then(servers => servers.rows)
+        .catch(err => console.error(err));
 }
 
 exports.createAllTables = password => {

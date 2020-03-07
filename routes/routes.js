@@ -95,13 +95,20 @@ const createAUser = (req, res) => {
         });
     });
     if (uniqueEmail) {
+        if (!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
+        const tempPath = req.file.path; /* name of the input field */
+        const targetPath = path.join(__dirname, 'temp/avatar.png'); // new path for temp file
+        fs.renameSync(tempPath, targetPath) // "moves" the file
+        let file = fs.readFileSync(targetPath); // reads the new file
+        let b64String = file.toString('base64'); // gets the base64 string representation 
+        fs.unlink(targetPath, err => console.log(err)); // deletes the new file
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
             let user = {
                 name: req.body.username,
                 password: myHash,
                 email: req.body.email,
-                icon: null
+                icon: b64String
             };
             schema.addUser(user);
             res.redirect('/signin');
@@ -320,13 +327,22 @@ const homepage = (req, res) => {
                     makeServerImage(server);
                     server.icon = `/.img/servers/${server.id}.png`;
                 }
-                _render(res, "homepage", "Homepage", lNav, req.session.user.theme, {
-                    username: req.session.user.username,
-                    servers: servers,
-                    userImg: `/.img/${req.session.user.id}.png`,
-                    userId: req.session.user.id,
-                    status: req.session.user.status,
-                });
+                schema.getFriendsByUserId(req.session.user.id)
+                    .then(friends => {
+                        friends.forEach(f => {
+                            makeImage(f)
+                            f.icon = `/.img/${f.id}.png`
+                        })
+                        console.log(friends);
+                        _render(res, "homepage", "Homepage", lNav, req.session.user.theme, {
+                            username: req.session.user.username,
+                            servers: servers,
+                            userImg: `/.img/${req.session.user.id}.png`,
+                            userId: req.session.user.id,
+                            status: req.session.user.status,
+                            friends: friends,
+                        });
+                    })
             });
     } else {
         res.redirect("/signin");

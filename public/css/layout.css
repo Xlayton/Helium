@@ -231,7 +231,6 @@ body::-webkit-scrollbar {
 }
 
 .friend {
-    align-items: center;
     display: flex;
     flex-flow: row;
     margin: 0 1vw;

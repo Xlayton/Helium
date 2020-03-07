@@ -8,15 +8,21 @@ block main-content
                 each server in servers
                     div(class="server" name=server.id)
                         img(src=server.icon name=server.id class="server-icon")
-            div(class="server" id="editAccount" name=userId)
-                img(class="server-icon" src=userImg name=userId)
+                div(class="server" id="editAccount" name=userId)
+                    img(class="server-icon" src=userImg name=userId)
         div(class="mainarea")
             div(class="content")
                 h1(class="page-title") Welcome back 
                     span(class="username") #{username}
                 div(class="online-friends")
-                    h2(class="friends-title") Online Friends
+                    h2(class="friends-title") Friends
+                        form(action="/friendrequests" method="get")
+                            input(type="submit" id="btn" value="Add friends")
                     div(class="friends-container")
+                        each friend in friends
+                            div(class="friend")
+                                img(src=friend.icon class="msg-icon" id="user-friend" name=friend.status)
+                                h3(class="friend-name") #{friend.name}
         div(id="makeServerBack")
         div(id="makeServer")
             form(class="form" method="post" action="/makeServer" enctype="multipart/form-data")

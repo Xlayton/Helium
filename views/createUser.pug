@@ -1,15 +1,17 @@
 extends layout
 block main-content
     div(class="main-content")
-        form(id='userCreation' method='POST' action="/createUser" onsubmit="return checkCreation()" class='form')
+        form(id='userCreation' method='POST' action="/createUser" onsubmit="return checkCreation()" class='form' enctype="multipart/form-data")
             section(class="form-elements")
                 p(class="form-title") Create an Account
                 p Username:&nbsp;
-                    input(type='text' id='usernameCreation' name="username" maxlength="15")
+                    input(type='text' id='usernameCreation' name="username" maxlength="15" required)
                 p Password:&nbsp;
-                    input(type='text' id='passwordCreation' name="password")
+                    input(type='text' id='passwordCreation' name="password" required)
                 p E-mail:&nbsp;
-                    input(type='email' id='emailCreation' name="email")
+                    input(type='email' id='emailCreation' name="email" required)
+                p Profile Picture &nbsp;
+                    input(type="file" name="icon" accept=".png,.jpg,.jpeg,.gif" required)
                 p
                     input(type='submit' id="btn" value='Create Account')    
                 p Already have an account?&nbsp;
