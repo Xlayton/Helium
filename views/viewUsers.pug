@@ -10,3 +10,11 @@ html
         a(href='/createUser' class='btn') Create User
         br
         a(href='/signIn' class='btn') Log In
+        br
+        a(href='/friendRequests' class='btn') Friend Requests
+
+        p
+            if loggedInName == null
+                p No one is logged in
+            else
+                p=loggedInName.username

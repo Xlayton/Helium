@@ -112,7 +112,7 @@ const createAUser = (req, res) => {
 };
 
 const updateUserPage = (req, res) => { //taking user to user creation form
-    schema.getUser(req.params.id).then(user => {
+    schema.getUserById(req.params.id).then(user => {
         if (req.session.user) {
             if (req.session.user.isAuthenicated) {
                 _render(res, 'updateUser', 'Update a User', uNav, req.session.user.theme, {
@@ -132,7 +132,7 @@ const updateUserPage = (req, res) => { //taking user to user creation form
 };
 
 const updateUserDetails = (req, res) => { //after user fills out user creation form
-    schema.getUser(req.params.id).then(user => {
+    schema.getUserById(req.params.id).then(user => {
         // https://stackoverflow.com/questions/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
         if (!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
         const tempPath = req.file.path; /* name of the input field */
@@ -156,7 +156,8 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
                 password: myHash,
                 email: req.body.email,
                 icon: b64String,
-                theme: req.body.theme
+                theme: req.body.theme,
+                status: req.body.status
             };
             schema.updateUser(user, updatedUser);
             res.redirect('/seeUsers');
@@ -165,8 +166,7 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
 };
 
 const deleteUser = (req, res) => { //deletes user with id parameter
-    //end user session
-    schema.getUser(req.params.id).then(user => {
+    schema.getUserById(req.params.id).then(user => {
         schema.removeUser(user);
         res.redirect('/seeUsers');
     });
@@ -198,13 +198,14 @@ const signUserIn = (req, res) => {
                             email: thisUser.email,
                             id: thisUser.id,
                             icon: thisUser.icon,
-                            theme: thisUser.theme
+                            theme: thisUser.theme,
+                            status: thisUser.status
                         };
-                        // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
-                        foundUser = true;
-                        res.redirect('/homepage');
+                    // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
+                    foundUser = true;
+                    res.redirect('/seeUsers');
                     }
-                }
+                }   
             }
             if (!foundUser) {
                 res.redirect('/signIn');
@@ -273,6 +274,43 @@ const makeConnection = (ws, head) => {
     }
 };
 
+const friendRequests = (req,res) => {
+    schema.getUserById(req.session.user.id).then(thisUser => {
+        schema.getUsersFromFriendRequests(thisUser).then(users => {
+            _render(res, "friendRequests", "Friend Requests", uNav, "dark", {"requests": users, "loggedInUser": thisUser});
+        })
+    });
+}
+
+const sendFriendRequest = (req, res) => {
+    schema.getUserByEmail(req.body.email).then(searchedUser => { //user whose email was entered
+        schema.getUserById(req.session.user.id).then(currentUser => { //user who is signed in
+            schema.addUserToFriendRequests(currentUser,searchedUser)
+            res.redirect('/seeUsers');
+        })
+    });
+}
+
+const acceptRequest = (req, res) => {
+    schema.getUserById(req.params.id).then(searchedUser => { //user whose email was entered
+        schema.getUserById(req.session.user.id).then(currentUser => { //user who is signed in
+            schema.removeUserFromFriendRequests(currentUser, searchedUser);
+            schema.addUserToFriendList(currentUser, searchedUser);
+            schema.addUserToFriendList(searchedUser, currentUser);
+            res.redirect('/friendRequests');
+        });
+    })
+}
+
+const rejectRequest = (req, res) => {
+    schema.getUserById(req.params.id).then(searchedUser => {//user whose email was entered
+        schema.getUserById(req.session.user.id).then(currentUser => { //user who is signed in
+            schema.removeUserFromFriendRequests(currentUser, searchedUser);
+            res.redirect('/friendRequests');
+        });
+    })
+};
+
 const homepage = (req, res) => {
     if (req.session.user) {
         schema.getUsersChatRooms(req.session.user.id)
@@ -287,6 +325,7 @@ const homepage = (req, res) => {
                     servers: servers,
                     userImg: `/.img/${req.session.user.id}.png`,
                     userId: req.session.user.id
+                    status: req.session.user.status,
                 });
             });
     } else {
@@ -309,6 +348,7 @@ const chat = (req, res) => {
                         .then(server => {
                             _render(res, "chat", "Chat", lNav, req.session.user.theme, {
                                 serverID: req.params.id,
+                                status: req.session.user.status,
                                 servers: servers,
                                 invitecode: server.invitecode
                             });
@@ -413,6 +453,10 @@ module.exports = {
     signUserOut: signUserOut,
     getIndex: getIndex,
     makeConnection: makeConnection,
+    friendRequests: friendRequests,
+    sendFriendRequest: sendFriendRequest,
+    acceptRequest: acceptRequest,
+    rejectRequest: rejectRequest,
     homepage: homepage,
     chat: chat,
     makeRoom: makeRoom,
