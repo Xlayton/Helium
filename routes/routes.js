@@ -112,7 +112,7 @@ const createAUser = (req, res) => {
 };
 
 const updateUserPage = (req, res) => { //taking user to user creation form
-    schema.getUser(req.params.id).then(user => {
+    schema.getUserById(req.params.id).then(user => {
         if (req.session.user) {
             if (req.session.user.isAuthenicated) {
                 _render(res, 'updateUser', 'Update a User', uNav, req.session.user.theme, {
@@ -132,7 +132,7 @@ const updateUserPage = (req, res) => { //taking user to user creation form
 };
 
 const updateUserDetails = (req, res) => { //after user fills out user creation form
-    schema.getUser(req.params.id).then(user => {
+    schema.getUserById(req.params.id).then(user => {
         // https://stackoverflow.com/questions/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
         if (!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
         const tempPath = req.file.path; /* name of the input field */
