@@ -46,9 +46,7 @@ const makeServerImage = server => {
     }
     if (server.icon !== 'null') {
         let buff = Buffer.from(server.icon, 'base64');
-        if (!fs.existsSync(path.join(__dirname, `../public/.img/servers/${server.id}.png`))) {
-            fs.writeFileSync(path.join(__dirname, `../public/.img/servers/${server.id}.png`), buff);
-        }
+        fs.writeFileSync(path.join(__dirname, `../public/.img/servers/${server.id}.png`), buff);
     }
 };
 
@@ -121,19 +119,15 @@ const createAUser = (req, res) => {
 const updateUserPage = (req, res) => { //taking user to user creation form
     schema.getUserById(req.params.id).then(user => {
         if (req.session.user) {
-            if (req.session.user.isAuthenicated) {
+            if (req.session.user.isAuthenicated && parseInt(req.session.user.id) === parseInt(req.params.id)) {
                 _render(res, 'updateUser', 'Update a User', uNav, req.session.user.theme, {
                     "account": user
                 });
             } else {
-                _render(res, 'updateUser', 'Update a User', uNav, "dark", {
-                    "account": user
-                });
+                res.redirect("/signin");
             }
         } else {
-            _render(res, 'updateUser', 'Update a User', uNav, "dark", {
-                "account": user
-            });
+            res.redirect("/signin");
         }
     });
 };
@@ -141,19 +135,22 @@ const updateUserPage = (req, res) => { //taking user to user creation form
 const updateUserDetails = (req, res) => { //after user fills out user creation form
     schema.getUserById(req.params.id).then(user => {
         // https://stackoverflow.com/questions/15772394/how-to-upload-display-and-save-images-using-node-js-and-express
-        if (!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
-        const tempPath = req.file.path; /* name of the input field */
-        const targetPath = path.join(__dirname, 'temp/avatar.png'); // new path for temp file
-        fs.renameSync(tempPath, targetPath) // "moves" the file
-        let file = fs.readFileSync(targetPath); // reads the new file
-        let b64String = file.toString('base64'); // gets the base64 string representation 
-        fs.unlink(targetPath, err => console.log(err)); // deletes the new file
+        let b64String;
+        if (req.file) {
+            if (!fs.existsSync(path.join(__dirname, '/temp'))) fs.mkdirSync(path.join(__dirname, '/temp')); // check folder existence, create one ifn't exist
+            const tempPath = req.file.path; /* name of the input field */
+            const targetPath = path.join(__dirname, 'temp/avatar.png'); // new path for temp file
+            fs.renameSync(tempPath, targetPath) // "moves" the file
+            let file = fs.readFileSync(targetPath); // reads the new file
+            b64String = file.toString('base64'); // gets the base64 string representation 
+            fs.unlink(targetPath, err => console.log(err)); // deletes the new file
+        }
         req.session.user = {
             isAuthenicated: true,
             username: req.body.username,
             email: req.body.email,
             id: req.session.user.id,
-            icon: b64String,
+            icon: (req.file ? b64String : req.session.user.icon),
             theme: req.body.theme
         }
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
@@ -162,7 +159,7 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
                 name: req.body.username,
                 password: myHash,
                 email: req.body.email,
-                icon: b64String,
+                icon: (req.file ? b64String : req.session.user.icon),
                 theme: req.body.theme,
                 status: req.body.status
             };
@@ -208,11 +205,11 @@ const signUserIn = (req, res) => {
                             theme: thisUser.theme,
                             status: thisUser.status
                         };
-                    // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
-                    foundUser = true;
-                    res.redirect('/signin');
+                        // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
+                        foundUser = true;
+                        res.redirect('/signin');
                     }
-                }   
+                }
             }
             if (!foundUser) {
                 res.redirect('/signIn');
@@ -281,10 +278,13 @@ const makeConnection = (ws, head) => {
     }
 };
 
-const friendRequests = (req,res) => {
+const friendRequests = (req, res) => {
     schema.getUserById(req.session.user.id).then(thisUser => {
         schema.getUsersFromFriendRequests(thisUser).then(users => {
-            _render(res, "friendRequests", "Friend Requests", uNav, "dark", {"requests": users, "loggedInUser": thisUser});
+            _render(res, "friendRequests", "Friend Requests", uNav, "dark", {
+                "requests": users,
+                "loggedInUser": thisUser
+            });
         })
     });
 }
@@ -292,7 +292,7 @@ const friendRequests = (req,res) => {
 const sendFriendRequest = (req, res) => {
     schema.getUserByEmail(req.body.email).then(searchedUser => { //user whose email was entered
         schema.getUserById(req.session.user.id).then(currentUser => { //user who is signed in
-            schema.addUserToFriendRequests(currentUser,searchedUser)
+            schema.addUserToFriendRequests(currentUser, searchedUser)
             res.redirect('/homepage');
         })
     });
@@ -310,7 +310,7 @@ const acceptRequest = (req, res) => {
 }
 
 const rejectRequest = (req, res) => {
-    schema.getUserById(req.params.id).then(searchedUser => {//user whose email was entered
+    schema.getUserById(req.params.id).then(searchedUser => { //user whose email was entered
         schema.getUserById(req.session.user.id).then(currentUser => { //user who is signed in
             schema.removeUserFromFriendRequests(currentUser, searchedUser);
             res.redirect('/friendRequests');
@@ -366,7 +366,9 @@ const chat = (req, res) => {
                                 serverID: req.params.id,
                                 status: req.session.user.status,
                                 servers: servers,
-                                invitecode: server.invitecode
+                                invitecode: server.invitecode,
+                                userImg: `/.img/${req.session.user.id}.png`,
+                                userId: req.session.user.id
                             });
                         })
                 } else {
