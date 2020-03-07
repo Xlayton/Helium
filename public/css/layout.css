@@ -389,3 +389,11 @@ body::-webkit-scrollbar {
     overflow-wrap: break-word;
     word-break: break-all;
 }
+#editAccount::after {
+    z-index:1000;
+    content:"";
+    position:fixed;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+}

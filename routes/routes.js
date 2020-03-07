@@ -151,7 +151,8 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
             email: req.body.email,
             id: req.session.user.id,
             icon: (req.file ? b64String : req.session.user.icon),
-            theme: req.body.theme
+            theme: req.body.theme,
+            status: req.body.status
         }
         bcrypt.hash(req.body.password, null, null, (err, hash) => {
             var myHash = hash;
@@ -333,7 +334,6 @@ const homepage = (req, res) => {
                             makeImage(f)
                             f.icon = `/.img/${f.id}.png`
                         })
-                        console.log(friends);
                         _render(res, "homepage", "Homepage", lNav, req.session.user.theme, {
                             username: req.session.user.username,
                             servers: servers,

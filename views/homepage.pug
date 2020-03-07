@@ -8,7 +8,7 @@ block main-content
                 each server in servers
                     div(class="server" name=server.id)
                         img(src=server.icon name=server.id class="server-icon")
-                div(class="server" id="editAccount" name=userId)
+                div(class="server" id="editAccount" name=userId tag=status)
                     img(class="server-icon" src=userImg name=userId)
         div(class="mainarea")
             div(class="content")
@@ -20,8 +20,8 @@ block main-content
                             input(type="submit" id="btn" value="Add friends")
                     div(class="friends-container")
                         each friend in friends
-                            div(class="friend")
-                                img(src=friend.icon class="msg-icon" id="user-friend" name=friend.status)
+                            div(class="friend" id=friend.id  name=friend.status tag=friend.id )
+                                img(src=friend.icon class="msg-icon")
                                 h3(class="friend-name") #{friend.name}
         div(id="makeServerBack")
         div(id="makeServer")
