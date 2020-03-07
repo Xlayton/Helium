@@ -5,11 +5,11 @@ block main-content
             section(class="form-elements")
                 p(class="form-title") Create an Account
                 p Username:&nbsp;
-                    input(type='text' id='usernameCreation' name="username")
+                    input(type='text' id='usernameCreation' name="username" maxlength="15")
                 p Password:&nbsp;
                     input(type='text' id='passwordCreation' name="password")
                 p E-mail:&nbsp;
-                    input(type='text' id='emailCreation' name="email")
+                    input(type='email' id='emailCreation' name="email")
                 p
                     input(type='submit' id="btn" value='Create Account')    
                 p Already have an account?&nbsp;

@@ -19,7 +19,7 @@ exports.getAllUsers = async() => {
 
 exports.addUser = user => {
     pool
-    .query(`insert into users(name,email,icon,password,theme,status) values('${user.name}','${user.email}','${user.icon}','${user.password}', 'dark', 'online')`)
+    .query(`insert into users(name,email,icon,password,friends,friendreqs,theme,status) values('${user.name}','${user.email}','${user.icon}','${user.password}',ARRAY[]::BIGINT[], ARRAY[]::BIGINT[],'dark','online')`)
     .catch(err => console.error(err));
 };
 
@@ -35,7 +35,31 @@ exports.updateUser = (user, newUser) => {
     .catch(err => console.error(err));
 };
 
-exports.getUser = async id => {
+exports.addUserToFriendRequests = (requestedUser, currentUser) => {
+    pool
+    .query(`update users set friendreqs = friendreqs || cast(${requestedUser.id} as bigint) where id=${currentUser.id}`)
+    .catch(err => console.error(err));
+}
+
+exports.removeUserFromFriendRequests = (requestedUser, currentUser) => {
+    pool
+    .query(`update users set friendreqs = array_remove(friendreqs, cast(${currentUser.id} as bigint)) where id=${requestedUser.id}`)
+    .catch(err => console.error(err));
+}
+
+exports.addUserToFriendList = (requestedUser, currentUser) => {
+    pool
+    .query(`update users set friends = friends || cast(${requestedUser.id} as bigint) where id=${currentUser.id}`)
+    .catch(err => console.error(err));
+}
+
+exports.removeUserFromFriendList = (requestedUser, currentUser) => {
+    pool
+    .query(`update users set friends = array_remove(friends, cast(${currentUser.id} as bigint)) where id=${requestedUser.id}`)
+    .catch(err => console.error(err));
+}
+
+exports.getUserById = async id => {
     return pool
         .query(`select * from users where id=${id}`)
         .then(res => res.rows[0])
@@ -64,11 +88,31 @@ exports.getChatRoomByInviteCode = async inviteCode => {
     .catch(err => console.error(err));
 };
 
+exports.getUserByEmail = async email => {
+    return pool
+    .query(`select * from users where email='${email}'`)
+    .then(res => res.rows[0])
+    .catch(err => console.error(err));
+};
 exports.getChatRoomInviteCodeById = async roomID => {
     return pool
     .query(`select invitecode from chatrooms where id = cast(${roomID} as bigint)`)
     .then(res => res.rows[0])
     .catch(err => console.error(err));
+};
+
+exports.getUsersFromFriendRequests = async user => {
+    return pool
+    .query(`select * from users where id in (${user.friendreqs.join(",")})`)
+    .then(res => res.rows)
+    .catch(err => console.error(err));
+}
+
+exports.getUsersFromFriends = async user => {
+    return pool
+    .query(`select * from users where id in ${user.friends.join(",")}`)
+    .then(res => res.rows)
+    .catch(err => console.error(err))
 };
 
 exports.addUserToChatRoom = (roomID, userID) => {
@@ -94,7 +138,8 @@ exports.createAllTables = password => {
         pool.query('create table messages(id serial PRIMARY KEY,msg text NOT NULL,usr bigint NOT NULL,reactions bigint[])').catch(err => console.log(err))
         pool.query('create table reactions(id serial PRIMARY KEY,emoji bigint NOT NULL,usr bigint NOT NULL)').catch(err => console.log(err))
         pool.query('create table roles(id serial PRIMARY KEY,name text NOT NULL,color text,permission bigint NOT NULL)').catch(err => console.log(err))
-        pool.query('create table users(id serial PRIMARY KEY,name text NOT NULL,email text NOT NULL,icon text,password text NOT NULL,friends bigint[],theme text,status text)').catch(err => console.log(err))
+        pool.query('create table users(id serial PRIMARY KEY,name text NOT NULL,email text NOT NULL,icon text,password text NOT NULL,friends bigint[],friendReqs bigint[],theme text,status text)').catch(err => console.log(err))
+
     }
 }
 

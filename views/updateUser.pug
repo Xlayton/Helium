@@ -2,14 +2,12 @@ html
     body
         div(class="content")
             form(id='update' method='POST' enctype='multipart/form-data' action="/updateUser/"+account.id onsubmit="return checkUpdate()" class='form')
-                //- p Id:&nbsp;
-                //-     input(type='text' id='IdUpdate' name="userId" value=account.id)
                 p Username:&nbsp;
-                    input(type='text' id='usernameUpdate' name="username" value=account.name)
+                    input(type='text' id='usernameUpdate' name="username" value=account.name maxlength="15")
                 p Password:&nbsp;
                     input(type='text' id='passwordUpdate' name="password")
                 p E-mail:&nbsp;
-                    input(type='text' id='emailUpdate' name="email" value=account.email)
+                    input(type='email' id='emailUpdate' name="email" value=account.email)
                 p Icon:&nbsp;
                     input(type='file' id='iconUpdate' name='icon' value=account.icon accept="image/*")
                 if account.theme == "dark"
