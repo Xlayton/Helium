@@ -160,7 +160,7 @@ const updateUserDetails = (req, res) => { //after user fills out user creation f
                 status: req.body.status
             };
             schema.updateUser(user, updatedUser);
-            res.redirect('/seeUsers');
+            res.redirect('/signin');
         });
     });
 };
@@ -203,7 +203,7 @@ const signUserIn = (req, res) => {
                         };
                     // _render(res, 'viewUsers', 'View All Users', uNav, {"userData": allUsers});
                     foundUser = true;
-                    res.redirect('/seeUsers');
+                    res.redirect('/signin');
                     }
                 }   
             }
@@ -223,14 +223,14 @@ const signUserOut = (req, res) => {
                 if (err) {
                     console.log(err);
                 } else {
-                    res.redirect('/seeUsers');
+                    res.redirect('/signin');
                 }
             });
         } else {
-            res.redirect('/seeUsers');
+            res.redirect('/signin');
         }
     } catch (error) {
-        res.redirect('/seeUsers');
+        res.redirect('/signin');
     }
 };
 
@@ -286,7 +286,7 @@ const sendFriendRequest = (req, res) => {
     schema.getUserByEmail(req.body.email).then(searchedUser => { //user whose email was entered
         schema.getUserById(req.session.user.id).then(currentUser => { //user who is signed in
             schema.addUserToFriendRequests(currentUser,searchedUser)
-            res.redirect('/seeUsers');
+            res.redirect('/homepage');
         })
     });
 }
