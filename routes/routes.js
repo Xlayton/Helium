@@ -324,7 +324,7 @@ const homepage = (req, res) => {
                     username: req.session.user.username,
                     servers: servers,
                     userImg: `/.img/${req.session.user.id}.png`,
-                    userId: req.session.user.id
+                    userId: req.session.user.id,
                     status: req.session.user.status,
                 });
             });
