@@ -8,6 +8,8 @@ block main-content
                 each server in servers
                     div(class="server" name=server.id)
                         img(src=server.icon name=server.id class="server-icon")
+                div(class="server" id="editAccount" name=userId value=status)
+                    img(class="server-icon" src=userImg name=userId)
         div(class="channel-area")
             button(id="copy-invite-code" name=invitecode) Copy Invite Code
             textarea(style="position:absolute; left:-9999px;" id="invitelink" readonly)

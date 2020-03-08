@@ -40,7 +40,7 @@ const upload = multer({
 app.get("/", route.getIndex);
 app.get('/seeUsers', route.viewUsers);
 app.get('/createUser', route.createUserPage);
-app.post('/createUser', urlencodedParser, route.createAUser);
+app.post('/createUser', urlencodedParser, upload.single('icon'), route.createAUser);
 app.get('/updateUser/:id', route.updateUserPage);
 app.post('/updateUser/:id', urlencodedParser, upload.single('icon'), route.updateUserDetails);
 app.get('/deleteUser/:id', route.deleteUser);

@@ -231,7 +231,6 @@ body::-webkit-scrollbar {
 }
 
 .friend {
-    align-items: center;
     display: flex;
     flex-flow: row;
     margin: 0 1vw;
@@ -389,4 +388,12 @@ body::-webkit-scrollbar {
     flex-wrap: wrap;
     overflow-wrap: break-word;
     word-break: break-all;
+}
+#editAccount::after {
+    z-index:1000;
+    content:"";
+    position:fixed;
+    width:10px;
+    height:10px;
+    border-radius:50%;
 }
