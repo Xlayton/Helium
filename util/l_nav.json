@@ -1,4 +1,5 @@
 {
-    "Homepage": "/homepage",
-    "Public Servers": "/servers"
+    "Home": "/homepage",
+    "Public Servers": "/servers",
+    "Log Out": "/signOut"
 }
