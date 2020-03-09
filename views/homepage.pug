@@ -21,6 +21,12 @@ block main-content
                     div(class="friends-container")
                         each friend in friends
                             div(class="friend" id=friend.id  name=friend.status tag=friend.id )
+                                if friend.status == "online"
+                                    img(src="/img/online.png" class="friend-status")
+                                else if friend.status == "idle"
+                                    img(src="/img/idle.png" class="friend-status")
+                                else if friend.status == "busy"
+                                    img(src="/img/busy.png" class="friend-status")
                                 img(src=friend.icon class="msg-icon")
                                 h3(class="friend-name") #{friend.name}
         div(id="makeServerBack")
