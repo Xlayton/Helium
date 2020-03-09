@@ -5,6 +5,7 @@ const uNav = require("../util/u_nav");
 const lNav = require("../util/l_nav");
 const schema = require("../db/db.js");
 const path = require('path');
+
 //Put theme in session, every time a page is rendered check if user is logged, if so use theme from session else deafult dark
 var websocketList = [];
 /**
@@ -223,17 +224,13 @@ const signUserIn = (req, res) => {
 
 const signUserOut = (req, res) => {
     try {
-        if (req.params.id == req.session.user.id) {
-            req.session.destroy(err => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    res.redirect('/signin');
-                }
-            });
-        } else {
-            res.redirect('/signin');
-        }
+        req.session.destroy(err => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.redirect('/signin');
+            }
+        });
     } catch (error) {
         res.redirect('/signin');
     }
