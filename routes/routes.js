@@ -259,7 +259,9 @@ const makeConnection = (ws, head) => {
         ws.on('message', function incoming(message) {
             websocketList.forEach(con => {
                 try {
-                    con.ws.send(`<section class="message"><section class="msg-top"><img class="msg-icon" src="/.img/${head.session.user.id}.png"><span class="username">${head.session.user.username}</span></section><span class="message-text">${message}</span></section>`);
+                    if (con.roomID === conn.roomID) {
+                        con.ws.send(`<section class="message"><section class="msg-top"><img class="msg-icon" src="/.img/${head.session.user.id}.png"><span class="username">${head.session.user.username}</span></section><span class="message-text">${message}</span></section>`);
+                    }
                 } catch (err) {}
             });
             ws.on('close', function close() {
