@@ -33,11 +33,11 @@ body {
 }
 
 .title {
-    color: #efefef;
+    color: #000;
 }
 
 .sub-title {
-    color: #efefef;
+    color: #000;
 }
 
 .form {
@@ -212,15 +212,18 @@ body {
     border: .5px solid #000;
     background-color: #dcdcdc;
 }
+
 .servers::-webkit-scrollbar-thumb {
     background: #676767;
     border: 2px solid #3d3d3d;
 }
+
 .server {
     background-color: #e8e8e8;
 }
+
 #makeServerBack {
-    background-color: rgba(220,220,220, 0.8)
+    background-color: rgba(220, 220, 220, 0.8)
 }
 
 .server-listing {
@@ -231,22 +234,28 @@ body {
     color: #000;
     background-color: #e8e8e8;
 }
+
 .join-server:hover {
     background-color: #efefef;
 }
+
 .join-server:active {
     background-color: #dcdcdc;
 }
+
 .message {
     border: 1px solid #676767
 }
+
 .msg-top {
     border: 1px solid #676767;
 }
+
 .filter-form .filter-input {
     border-bottom: 1px solid #000;
-    color:#000;
+    color: #000;
 }
+
 .filter-form .filter-input::placeholder {
     color: rgba(0, 0, 0, 0.7);
 }
